@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM "Accros du Peignoir"</title>
+    <style>
+        /* Début du CSS */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            background: #fff;
+            padding: 20px 40px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1, h2 {
+            color: #0056b3;
+        }
+        .nav-buttons {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+        }
+        .nav-buttons button {
+            padding: 10px 15px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .nav-buttons button:hover {
+            background-color: #0056b3;
+        }
+        .activation-btn { 
+            background-color: #6c757d; /* Couleur différente pour le distinguer */
+            color: white;
+            border-radius: 5px;
+            padding: 10px 15px;
+            margin-left: auto; /* Pousse le bouton à droite */
+        }
+        .activation-btn:hover {
+            background-color: #5a6268;
+        }
+        .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+        }
+        /* Style du tableau de bord */
+        .dashboard-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .dashboard-controls input, .dashboard-controls select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .dashboard-controls input {
+            flex-grow: 1;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        td button {
+            padding: 5px 10px;
+            margin-right: 5px;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+        }
+        .edit-btn { background-color: #28a745; }
+        .delete-btn { background-color: #dc3545; }
+        .mail-btn { background-color: #ffc107; }
+        .comment-btn { background-color: #17a2b8; }
+
+
+        /* Nouveaux styles pour les statuts */
+        .status-select {
+            border: none;
+            padding: 5px 8px;
+            color: white;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .status-Non-traité {
+            background-color: #dc3545; /* Rouge */
+        }
+        .status-Mail-envoyé {
+            background-color: #ffc107; /* Orange */
+        }
+        .status-Validé {
+            background-color: #28a745; /* Vert */
+        }
+        
+        /* Styles pour le bouton de facturation */
+        .facture-button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .facture-non {
+            background-color: #ff6347; /* Rouge */
+        }
+        .facture-oui {
+            background-color: #3cb371; /* Vert */
+        }
+
+        /* Style du formulaire */
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        .form-buttons {
+            margin-top: 20px;
+        }
+        .form-buttons button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .form-buttons button:hover {
+            background-color: #0056b3;
+        }
+        .participant-container {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+        /* Style pour le générateur de mail */
+        .mail-block {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        .mail-content {
+            white-space: pre-wrap;
+            background-color: #fff;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        .copy-btn {
+            padding: 10px 15px;
+            margin-top: 10px;
+            border: none;
+            background-color: #28a745;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .copy-btn:hover {
+            background-color: #218838;
+        }
+        .mail-choice-btn {
+            padding: 15px 25px;
+            margin: 10px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .mail-choice-btn:hover {
+            background-color: #0056b3;
+        }
+        .mail-content-display {
+            border: 1px solid #ccc;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            margin-top: 20px;
+            white-space: pre-wrap;
+        }
+        /* Fin du CSS */
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+    <div class="container">
+        <h1>CRM "Accros du Peignoir"</h1>
+
+        <div class="nav-buttons">
+            <button onclick="showSection('dashboard')">Tableau de bord</button>
+            <button onclick="showSection('form')">Ajouter un dossier</button>
+            <button class="activation-btn" onclick="showSection('mailActivation')">Mail d'activation de Box</button>
+        </div>
+        
+        <div id="dashboard" class="section active">
+            <h2>Dossiers clients</h2>
+            <div class="dashboard-controls">
+                <input type="text" id="searchInput" placeholder="Rechercher par nom, mail, box ID...">
+                <select id="boxTypeFilter">
+                    <option value="">Filtrer par type de box</option>
+                    <option value="BOX Premiers émois thermaux">BOX Premiers émois thermaux</option>
+                    <option value="Box Divine évasion au spa">Box Divine évasion au spa</option>
+                    <option value="BOX Eveil des sens">BOX Eveil des sens</option>
+                    <option value="Box Le séjour des Accros du Peignoir">Box Le séjour des Accros du Peignoir</option>
+                    <option value="Box Le séjour des Accros du Peignoir PREMIUM">Box Le séjour des Accros du Peignoir PREMIUM</option>
+                </select>
+                <select id="stationFilter">
+                    <option value="">Filtrer par station</option>
+                    </select>
+            </div>
+            <p id="noClientsMessage">Aucun client enregistré.</p>
+            <div style="overflow-x:auto;">
+                <table id="clientsTable">
+                    <thead>
+                        <tr>
+                            <th>Nom & Prénom</th>
+                            <th>ID de box</th>
+                            <th>Type de box</th>
+                            <th>Station thermale</th>
+                            <th>Statut</th>
+                            <th>Facturé</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="form" class="section">
+            <h2 id="formTitle">Ajouter un nouveau dossier</h2>
+            <form id="clientForm">
+                <input type="hidden" id="clientId">
+                
+                <div class="form-group">
+                    <label for="boxId">ID de la box :</label>
+                    <input type="text" id="boxId" placeholder="Ex: AX123456" required>
+                </div>
+                <div class="form-group">
+                    <label for="typeBox">Type de box :</label>
+                    <select id="typeBox" required>
+                        <option value="">Sélectionner...</option>
+                        <option value="BOX Premiers émois thermaux">BOX Premiers émois thermaux</option>
+                        <option value="Box Divine évasion au spa">Box Divine évasion au spa</option>
+                        <option value="BOX Eveil des sens">BOX Eveil des sens</option>
+                        <option value="Box Le séjour des Accros du Peignoir">Box Le séjour des Accros du Peignoir</option>
+                        <option value="Box Le séjour des Accros du Peignoir PREMIUM">Box Le séjour des Accros du Peignoir PREMIUM</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="station">Station thermale :</label>
+                    <select id="station" required>
+                        <option value="">Sélectionner...</option>
+                        </select>
+                </div>
+                <div class="form-group">
+                    <label for="dates">Dates souhaitées :</label>
+                    <input type="text" id="dates" placeholder="Ex: 01/10/2025 - 15/10/2025">
+                </div>
+
+                <div class="form-group">
+                    <label for="nbParticipants">Nombre de participants :</label>
+                    <select id="nbParticipants" required>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>
+                </div>
+
+                <div id="participantsContainer">
+                    </div>
+
+                <div class="form-group">
+                    <label for="commentaires">Commentaires :</label>
+                    <textarea id="commentaires" placeholder="Ajouter des notes, des détails supplémentaires..."></textarea>
+                </div>
+                
+                <div class="form-buttons">
+                    <button type="submit">Sauvegarder le dossier</button>
+                    <button type="reset" onclick="resetForm()">Annuler</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="mailGenerator" class="section">
+            <h2>Générateur de mail</h2>
+
+            <div class="mail-block">
+                <h3>Objet du mail :</h3>
+                <div id="mailSubject" class="mail-content"></div>
+                <button class="copy-btn" onclick="copyMailSubject()">Copier l'objet</button>
+            </div>
+            
+            <div class="mail-block">
+                <h3>Corps du mail :</h3>
+                <div id="mailBody" class="mail-content"></div>
+                <button class="copy-btn" onclick="copyMailBody()">Copier le corps du mail</button>
+            </div>
+
+            <button onclick="showSection('dashboard')">Retour au tableau de bord</button>
+        </div>
+
+        <div id="mailActivation" class="section">
+            <h2>Générateur de mail d'activation</h2>
+            <p>Veuillez choisir le nombre de clients :</p>
+            <button class="mail-choice-btn" onclick="generateActivationMail(1)">1 personne</button>
+            <button class="mail-choice-btn" onclick="generateActivationMail(2)">2 personnes</button>
+
+            <div id="activationMailContainer" style="display:none;">
+                <div class="mail-block">
+                    <h3>Objet du mail :</h3>
+                    <div id="activationMailSubject" class="mail-content"></div>
+                    <button class="copy-btn" onclick="copyActivationMailSubject()">Copier l'objet</button>
+                </div>
+                
+                <div class="mail-block">
+                    <h3>Corps du mail :</h3>
+                    <div id="activationMailBody" class="mail-content"></div>
+                    <button class="copy-btn" onclick="copyActivationMailBody()">Copier le corps du mail</button>
+                </div>
+
+                <button onclick="showSection('dashboard')">Retour au tableau de bord</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Début du JavaScript
+        // Configuration de Supabase
+        const SUPABASE_URL = 'https://reaqsrlhdxpvpozwelmq.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlYXFzcmxoZHhwdnBvendlbG1xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MjI1MTMsImV4cCI6MjA3NDE5ODUxM30.HouILqtaoOkrBGPk8lhJzrePAmGWkftyxM--CVlBvsE';
+        const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Constantes et variables
+        const CLIENTS_STORAGE_KEY = 'clients';
+        const participantsContainer = document.getElementById('participantsContainer');
+        const form = document.getElementById('clientForm');
+        let clients = [];
+        let editingId = null;
+
+        // Modèles de mail
+        const mailSubjectTemplate = `Réservation Box Accros du Peignoir`;
+        const mailBodyTemplate = `Bonjour,
+{{Sexe}} {{Nom et prénom du client}} a fait une demande de réservation pour la {{Type de Box}} à {{Ville/ Station choisi pour réaliser la box}}, pour {{Nombre de client participant}} personnes.
+
+Voici la composition de la box : {{Composition de la Box}}
+
+Pour rappel : la box est d’une valeur de {{Prix de la box}}, dont 10% de commission pour la Route des Villes d’Eaux. Donc une facture de {{Prix de la box - 10%}} (par box).
+
+Sera-t-il possible de fixer la date de la box au {{Date souhaitait par le client}}?
+
+Pour information, voici leurs informations personnelles pour la réservation :
+{{Ensemble des informations des clients}}
+ 
+Merci d’avance de votre réponse.
+ 
+Bien cordialement,
+`;
+
+        // Modèles de mails d'activation
+        const activationMailSubjectTemplate = `Votre Box est activée – Informations pour finaliser votre réservation`;
+        const activationMailBodyTemplate1 = `Bonjour,
+Nous vous remercions d'avoir activé votre Box de soins. Afin de finaliser votre réservation, nous vous invitons à nous fournir les informations suivantes :
+Station thermale de votre choix : Veuillez indiquer la station où vous souhaitez réaliser votre expérience bien-être.
+Date souhaitée : Merci de nous préciser la date à laquelle vous souhaitez effectuer votre soin.
+Informations personnelles :
+Nom et prénom :
+Numéro de téléphone :
+Adresse e-mail :
+Adresse postale complète :
+Une fois ces informations reçues, un membre de notre équipe vous contactera dans les plus brefs délais pour finaliser les détails de votre réservation.
+Nous restons à votre disposition pour toute question supplémentaire.
+Cordialement,
+`;
+
+        const activationMailBodyTemplate2 = `Bonjour,
+Nous vous remercions d'avoir activé votre Box de soins. Afin de finaliser votre réservation, nous vous invitons à nous fournir les informations suivantes :
+Station thermale de votre choix : Veuillez indiquer la station où vous souhaitez réaliser votre expérience bien-être.
+Date souhaitée : Merci de nous préciser la date à laquelle vous souhaitez effectuer votre soin.
+Informations personnelles :
+Nom et prénom :
+Numéro de téléphone :
+Adresse e-mail :
+Adresse postale complète :
+Informations personnelles de l'accompagnant :
+Nom et prénom :
+Numéro de téléphone :
+Adresse e-mail :
+Adresse postale complète :
+Une fois ces informations reçues, un membre de notre équipe vous contactera dans les plus brefs délais pour finaliser les détails de votre réservation.
+Nous restons à votre disposition pour toute question supplémentaire.
+Cordialement,
+`;
+
+        // Données complètes des boxes et stations
+        const boxDetails = {
+            "BOX Premiers émois thermaux": {
+                price: "49€",
+                price_10_percent_off: "44.10€",
+                composition: {
+                    'Bourbon-Lancy': 'Une matinée de 3 soins aux Thermes pour découvrir les bienfaits du thermalisme (soins à définir lors de la réservation selon disponibilité). Dates de validité : box réalisable de mars à novembre, hors dimanche.',
+                    'Châteauneuf-les-Bains': 'Laissez-vous bercer par les bienfaits des eaux thermales et personnalisez votre expérience en choisissant 4 soins parmi une sélection dédiée à votre bien-être : douche colonne revitalisante, bain hydromassant relaxant, application de cataplasmes d’argile aux vertus apaisantes, bassin thermal réconfortant ou étuve locale pour un soulagement en profondeur.',
+                    'Cransac-les-Thermes': '4 soins thermaux à choisir parmi : douche locales de gaz sec (rachis, épaules, genoux, coudes ou hanches), étuve mains/pieds, vaporarium, étuve générale, berthollaix.',
+                    'La Bourboule': 'Partez à la découverte des bienfaits de l’eau thermale des Grands Thermes de La Bourboule, le temps d’un matin. Régénérez votre peau et tonifiez vos voies respiratoires.',
+                    'Le Mont-Dore': 'Découvrez le bien-être thermal avec cette box composé de 3 soins thermaux, dont des jets de forte pression en piscine thermale, un bain reminéralisant hydromassant, ainsi qu’un accès à la tisanerie et bain de vapeur.',
+                    'Néris-les-Bains': 'Un velouté de bain (20 minutes) comprenant un bain hydromassant aux huiles essentielles qui apporte un effet sédatif équilibrant, tonique et décontractant + une douche à jet (10 minutes) Tonifiante et stimulante, elle permet de décontracter les muscles grâce à un protocole de massage complet effectué par la spa praticienne à l’aide du jet sous pression.',
+                    'Royat-Chamalières': 'Votre découverte thermale au pied des Volcans pour vous ressourcer et retrouver énergie et sérénité. Votre programme de soins : Bain de gaz (doux et reposant, favorisant la circulation sanguine), Application de boue (mélange d’argile et d’eau thermale, décontracturant), Douche (relaxante et tonifiante), Bain bouillonnant (décontractant, relaxant et stimulant circulatoire).',
+                    'Saint-Honoré-les-Bains': 'Votre spa liberté au sein de magnifiques thermes 1900, aux secteurs de soins vastes et clairs, ouvrant sur un parc séculaire. Dans un décor chic et feutré, vous pourrez vous y faire chouchouter en bénéficiant d’installations tout confort avec au programme : un bain reminéralisant hydromassant (10 minutes), jets de fortes pression (15 minutes), un accès au vaporarium et à la tisanerie.',
+                }
+            },
+            "Box Divine évasion au spa": {
+                price: "89€",
+                price_10_percent_off: "80.10€",
+                composition: {
+                    'Bourbon-Lancy': 'Un modelage « Velours » à l’huile chaude, enveloppant et doux de 40 minutes. +1 boisson fraîche offerte au spa +1 accès aux espaces thermoludiques (bassins intérieur et extérieur d’eau tehrmale, sauna, hammam, jacuzzi…).',
+                    'Bourbon-l’Archambault': 'Votre Escapade Sérénité (4 soins/2 accès) : bain hydro massant 10 minutes, jets en piscine 10 minutes, lit hyromassant 10 minutes, massage détente aromatique 30 minutes, accès libre au bain de vapeur, à l’espace fitness, à la salle de repos et tisanerie.',
+                    'Châteauneuf-les-Bains': 'Offrez-vous un moment d’évasion : un massage relaxant de 30 minutes, accompagné de 4 soins thermaux au choix parmi douche colonne, bain hydromassant, application de cataplasmes d’argile, bassin thermal ou étuve locale. Prolongez cette parenthèse de bien-être avec une pause gourmande autour d’une boisson chaude et de gourmandises.',
+                    'Cransac-les-Thermes': 'Un enveloppement de kaolin sur lit jouvence 20 min + 1 lit hydromassant 15 min + 1 bain hydromassant multisensoriel 15 min + 1 modelage aromatique détente 30 minutes.',
+                    'Le Mont-Dore': 'Immergez-vous dans bien-être thermal avec cette box composé d’un bain reminéralisant hydromassant, de jets de forte pression en piscine thermale, d’une ondée thermale hydromassante et d’un lit hydromassant.',
+                    'Montrond-les-Bains': 'Un Spa Sérénité composé de 3 soins & un accès au bassin des Iléades comprenant un massage Détente Aromatique Fleur d’Oranger et Bois de Cèdre 30mn, un bain Hydromassant Relaxant aux Huiles Essentielles 15mn, un lit Tiède Hydromassant 15mn, et un accès aux Bassins et à l’Espace Détente des Iléades 2h30.',
+                    'Néris-les-Bains': 'Un forfait de trois soins composé d’un massage sous affusion (20mn), d’un gommage sous affusion, et d’un instant particulier (15mn).',
+                    'Royat-Chamalières': 'Votre forfait de soins aux thermes de Royat comprenant un bain bouillonnant, une application de boue, un bain de gaz et un accès 2h30 aux bassins intérieurs et exterieurs de Royatonic + 1 lit hydromassant 20mn.',
+                    'Saint-Honoré-les-Bains': 'Votre spa sérénité qui comprend un massage détente aromatique de 30 min, un lit hydromassant de 10 min, un bain reminéralisant hydromassant de 10 min, une ondée thermale de 10 min, un accès au vaporarium et à la tisanerie.',
+                    'Vals-les-Bains': 'Massage relaxant Californien de 30 minutes et une sérénité retrouvée grâce à une alliance de gestuelles douces et enveloppantes + une entrée 2h au parcours sensoriel « Les Bassins du Séquoia ».',
+                }
+            },
+            "BOX Eveil des sens": {
+                price_soins: "69€",
+                price_restaurant: "30€",
+                price_10_percent_soins: "62.10€",
+                price_10_percent_restaurant: "27€",
+                composition: {
+                    'Bourbon-Lancy': '– Un modelage de 30 minutes au choix parmi : le modelage CeltÔ relax : enveloppant & doux, réalisé par des manœuvres d’effleurement OU le modelage des riads : rythmé et tonique OU le modelage divin : enveloppant & doux, inspiré des techniques ayurvédiques. – Une boisson fraîche offerte au spa Le déjeuner (Menu du Cloître avec entrée/plat/dessert).',
+                    'Châteauneuf-les-Bains': 'Menu spécial de l’Auberge “Les Accros du Peignoir” au Castel hôtel 1904 de Saint-Gervais d’Auvergne : un plat et un dessert plus l’apéritif de l’Auberge (sélectionné par nous). Le menu varie au gré du marché et des saisons. Les boissons, sauf l’apéritif, sont en supplément. Plongez dans une expérience sensorielle unique : profitez d’un massage de 30 minutes, d’un bain hydromassant revitalisant, d’une douche colonne stimulante, et d’un accès au bassin thermal pour un moment de relaxation absolue.',
+                    'La Bourboule': 'Venez découvrir une nouvelle expérience sensorielle thermale au sein d’un établissement rénové dans une ambiance douce et lumineuse. Un parcours ponctué de douches, de bains thermaux et d’un Vaporarium thermal, une heure de pur plaisir. Profitez du nouvel espace Premium spécialement dédié à votre pause bien-être thermale. Et pour accompagner ces délicatesses, venez vous ravir les papilles dans un restaurant partenaire.',
+                    'Royat-Chamalières': 'Votre forfait 4 soins aux thermes de Royat comprenant un bain de gaz, une application de boue, un bain bouillonnant, un modelage + 1 menu entrée, plat, dessert dans un restaurant reconnu de la station.',
+                }
+            },
+            "Box Le séjour des Accros du Peignoir": {
+                price_soins: "179€",
+                price_hotellerie: "179€",
+                price_10_percent_soins: "161,10€",
+                price_10_percent_hotellerie: "161,10€",
+                composition: {
+                    'La Bourboule': 'Une nuit en chambre standard avec petit déjeuner à La Villa François Premier 2 personnes. Un massage sur mesure de 60 minutes par personne (pas de duo). Une Coupe de champagne. Un forfait Premium aux Grands Thermes : sauna, douche pulvérisée, douche au jet, douche pénétrante, brouillard, bain bouillonnant parfumé, accès Premium.',
+                    'Bourbon-Lancy': 'Votre séjour au cœur du Parc Thermal et à deux pas du Centre-Ville et de la Cité Médiévale de Bourbon-Lancy dans un lieu calme et chaleureux, propice au repos, à la détente et au Bien-Être. Vous bénéficiez du diner en formule Menu du Cloître avec entrée/plat/dessert. + Une nuit avec petit déjeuner au Grand Hôtel + Un modelage « Velours » à l’huile chaude, enveloppant et doux de 40 minutes +1 Boisson fraîche +1 accès aux espaces thermoludiques (piscine, sauna, hammam, jacuzzi). Box réalisable hors mardi, mercredi matin et dimanche après-midi.',
+                    'Châteauneuf-les-Bains': 'Offrez-vous un moment d’évasion : un massage relaxant de 30 minutes, accompagné de 4 soins thermaux au choix parmi douche colonne, bain hydromassant, application de cataplasmes d’argile, bassin thermal ou étuve locale. Prolongez cette parenthèse de bien-être avec une pause gourmande autour d’une boisson chaude et de gourmandises aux thermes. Votre nuit Douillette “Chez Nanette” aux Maisons du Castel de Saint-Gervais d’Auvergne avec petit-déjeuner-buffet. Pour le dîner, vous dégusterez le Menu spécial de l’Auberge “Les Accros du Peignoir” comprenant une entrée et un plat ou un plat et un dessert. Le menu varie au gré du marché et des saisons. Au printemps et en été, les légumes du jardin seront à l’honneur.',
+                    'Châtel-Guyon': '1 nuit en studio Côme au sein d’Aïga résidence**** directement relié à votre espace de soins avec petit-déjeuner buffet. 1 douche sous affusion ou 1 douche locale des mains et des pieds, 1 bain de boue thermale ou 1 douche de boue thermale et 1 bain hydromassant au sein d’Aïga spa thermal. + Accès libre aux équipements de bien-être du spa la demi-journée de vos soins : bassin de détente en eau thermale (cols de cygne, couloir de nage à contre-courant, transats à bulles immergés…), bain à remous extérieur, solarium, hammams, salle de repos en lumière de wood, tisanerie et douches expérientielles.',
+                    'Cransac-les-Thermes': 'Au coeur d’un établissement qui domine la ville et se dresse au cœur d’une belle forêt d’acacias : 4 soins thermaux à choisir parmi : douche locales de gaz sec (rachis, épaules, genoux, coudes ou hanches), étuve mains/pieds, vaporarium, étuve générale, berthollaix. Spa : un enveloppement de kaolin sur lit jouvence (20 minutes) + un lit hydromassant (15 minutes) + un bain hydromassant multisensoriel (15 minutes) + un modelage aromatique détente (30 minutes). 1 nuit dans notre résidence Les Logis des Boisements ***, une résidence de grand confort avec studios et appartements climatisés directement ouverts sur la nature et l’agrément d’une vaste loggia privée.',
+                    'Chaudes-Aigues': 'Un weekend au plus proche de l’Eden pour retrouver sérénité, bien-être et relaxation avec 5 soins thermaux : une douche oscillante, une douche au jet , un bain bouillonnant, une décontraction musculaire en piscine et un massage sous affusion d’eau thermale. Votre hébergement à l’hôtel du Ban avec petit-déjeuner servi en chambre avec terrasse pour un instant de détente privilégié et une délicieuse harmonie. Une bouteille de champagne de 37,5cl vous attend à votre arrivée.',
+                    'Royat-Chamalières': 'Un programme de soins aux thermes de Royat (Bain bouillonnant / Application de boue/ Bain de gaz) et un forfait Royatonic Bains & Spa comprenant un coffret lit hydromassant (20 min) et un accès libre 2h30 aux installations du centre le jour du soin : bains intérieurs et extérieurs, hammams et saunas, salles de repos. Votre hébergement en demi-pension à l’hôtel Royal Saint Mart *** une élégante demeure bourgeoise, lovée au coeœur de ses vastes jardins fleuris, qui dégage une atmosphère de charme et de sérénité telle qu’on pouvait la vivre à la Belle-Epoque.',
+                    'Vals-les-Bains': 'Venez vous ressourcer au cœur de l’Ardèche méridionale et de la station thermale de Vals-les-Bains, dans environnement superbe et reposant, un hébergement dans une nuit pour 2 personnes Hôtel des Bains. Offrez-vous une parenthèse de bien-être au cœur d’un hôtel de charme victorien datant de 1860. Ce coffret comprend : Une nuit en chambre double dans notre établissement historique. Un petit-déjeuner gourmand servi sous forme de buffet à volonté. Un massage duo « Lâcher-prise & Relaxation » de 50 minutes. Deux accès de 2h au spa Séquoia Redwood.',
+                }
+            },
+            "Box Le séjour des Accros du Peignoir PREMIUM": {
+                price_soins: "400€",
+                price_hotellerie: "198€",
+                price_10_percent_soins: "384.30€",
+                price_10_percent_hotellerie: "178.20€",
+                composition: {
+                    'La Bourboule': 'Une nuit en chambre supérieure avec petit déjeuner à La Tour Pom’Pin 2 personnes. Un massage sur mesure de 60 minutes par personne (pas de duo). Un soin du visage personnalisé 75 min par personne (pas de duo). Un diner pour 2 personnes. Un forfait Premium aux Grands Thermes : sauna, douche pulvérisée, douche au jet, douche pénétrante, brouillard, bain bouillonnant parfumé, accès Premium.',
+                    'Bourbon-Lancy': 'Diner (Formule supérieure avec Menu Terroir : entrée/ plat / dessert) + Une nuit avec petit déjeuner au Grand Hôtel + Un modelage de 60 minutes au choix parmi le modelage Sea Holistic by Phytomer d’inspiration Thaï pour éliminer les tensions OU le modelage Trésor Wellness by Phytomer pour rééquilibrer les énergies. + Un soin visage au choix parmi le soin visage détox Citadine by Phytomer OU le soin visage Peau neuve au masculin by Phytomer + 1 application de boue marine autochauffante dans le dos. + 1 Boisson au choix.',
+                    'Châtel-Guyon': 'Hébergement au sein d’Aïga résidence**** : 1 nuit en studio Côme directement relié à votre espace de soins avec petit-déjeuner buffet inclus au restaurant nutri-gastronomique d’Aïga resort. Soins au sein d’Aïga spa thermal comprenant un bain hydromassant ou apaisant, un gommage du corps bio aux éclats de noix, un massage relaxant à l’huile bio de carottes sauvages, un soin d’hydrothérapie : 1 Douche générale et locale au jet, ou douche de boue, ou bain de boue, Douche escargot (selon dispo du spa) + Accès libre aux équipements de bien-être du spa la demi-journée de vos soins : bassin de détente en eau thermale (cols de cygne, couloir de nage à contre-courant, transats à bulles immergés…), bain à remous extérieur, solarium, hammams, salle de repos en lumière de wood, tisanerie et douches expérientielles.',
+                    'Vals-les-Bains': 'Au cœur de l’Ardèche méridionale et de la station thermale de Vals-les-Bains, un séjour où l’élégance de la nature vous apportera sérénité, détente et lâcher-prise. Les parcs à proximité invitent à la flânerie, la vaste terrasse arborée et joliment aménagée de l’hôtel vous enveloppe de sa fraîcheur pour vos moments de détente. Vous apprécierez la piscine extérieure chauffée, promesse de relaxation divine… Vous séjournerez 1 nuit dans une suite junior pour 2 personnes avec petit-déjeuner buffet à l’hôtel Helvie**** et une bouteille de champagne en chambre. De la jolie façade aux garde-corps en fer forgé émane déjà le charme des maisons qui ont une âme et une belle histoire à vous raconter. Profitez aussi d’un repas pour deux personnes au Circus Bistro qui régalera vos papilles. Au Spa Séquoia Redwood, vous profiterez d’un Massage en duo de 45 minutes + une entrée 2h au parcours sensoriel « Les Bassins du Séquoia » pour un authentique moment de détente dans un espace d’exception à l’eau thermale de Vals. Bains chauds, bassin extérieur, sauna, hammam, tisanerie, contre-courant, buses de massages et diverses étapes. Ce parcours en 14 étapes est une succession de soins d’hydrothérapie qui s’appuie sur l’alternance du chaud/froid, et qui effectue le même parcours que l’eau Valsoise.',
+                }
+            },
+        };
+
+        // Liste des stations thermales par box
+        const boxStations = {
+            "BOX Premiers émois thermaux": [
+                'Bourbon-Lancy', 'Châteauneuf-les-Bains', 'Cransac-les-Thermes', 'La Bourboule',
+                'Le Mont-Dore', 'Néris-les-Bains', 'Royat-Chamalières', 'Saint-Honoré-les-Bains'
+            ],
+            "Box Divine évasion au spa": [
+                'Bourbon-Lancy', 'Bourbon-l’Archambault', 'Châteauneuf-les-Bains', 'Cransac-les-Thermes',
+                'Le Mont-Dore', 'Montrond-les-Bains', 'Néris-les-Bains', 'Royat-Chamalières',
+                'Saint-Honoré-les-Bains', 'Vals-les-Bains'
+            ],
+            "BOX Eveil des sens": [
+                'Bourbon-Lancy', 'Châteauneuf-les-Bains', 'La Bourboule', 'Royat-Chamalières'
+            ],
+            "Box Le séjour des Accros du Peignoir": [
+                'La Bourboule', 'Bourbon-Lancy', 'Châteauneuf-les-Bains', 'Châtel-Guyon',
+                'Cransac-les-Thermes', 'Chaudes-Aigues', 'Royat-Chamalières', 'Vals-les-Bains'
+            ],
+            "Box Le séjour des Accros du Peignoir PREMIUM": [
+                'La Bourboule', 'Bourbon-Lancy', 'Châtel-Guyon', 'Vals-les-Bains'
+            ]
+        };
+        const statuses = ['Non traité', 'Mail envoyé', 'Validé'];
+
+        // --- Fonctions de gestion de l'interface ---
+
+        /**
+         * Affiche la section demandée et cache les autres.
+         * @param {string} sectionId - L'ID de la section à afficher (e.g., 'dashboard', 'form').
+         */
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        /**
+         * Réinitialise le formulaire de création/édition.
+         */
+        function resetForm() {
+            form.reset();
+            document.getElementById('formTitle').textContent = 'Ajouter un nouveau dossier';
+            editingId = null;
+            renderParticipantFields(1); // Affiche 1 participant par défaut
+        }
+
+        // --- Fonctions de gestion des données LocalStorage ---
+
+        /**
+         * Charge les clients depuis le LocalStorage.
+         */
+        function loadClients() {
+            const data = localStorage.getItem(CLIENTS_STORAGE_KEY);
+            clients = data ? JSON.parse(data) : [];
+            // Assurez-vous que chaque client a les propriétés facturee et commentaires
+            clients.forEach(client => {
+                if (typeof client.facturee === 'undefined') {
+                    client.facturee = false;
+                }
+                if (typeof client.commentaires === 'undefined') {
+                    client.commentaires = '';
+                }
+            });
+            renderDashboard();
+        }
+
+        /**
+         * Sauvegarde les clients dans le LocalStorage.
+         */
+        function saveClients() {
+            localStorage.setItem(CLIENTS_STORAGE_KEY, JSON.stringify(clients));
+        }
+
+        // --- Fonctions CRUD (Créer, Lire, Mettre à jour, Supprimer) ---
+
+        /**
+         * Ajoute un nouveau client ou modifie un client existant.
+         * @param {Event} event - L'événement de soumission du formulaire.
+         */
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            
+            const numParticipants = document.getElementById('nbParticipants').value;
+            const participants = [];
+            for (let i = 0; i < numParticipants; i++) {
+                participants.push({
+                    nom: document.getElementById(`nom-${i}`).value,
+                    prenom: document.getElementById(`prenom-${i}`).value,
+                    email: document.getElementById(`email-${i}`).value,
+                    telephone: document.getElementById(`telephone-${i}`).value,
+                    adresse: document.getElementById(`adresse-${i}`).value,
+                });
+            }
+
+            const newClient = {
+                id: editingId || Date.now(),
+                boxId: document.getElementById('boxId').value,
+                typeBox: form.typeBox.value,
+                station: form.station.value,
+                dates: form.dates.value,
+                statut: editingId ? clients.find(c => c.id === editingId).statut : 'Non traité',
+                facturee: editingId ? clients.find(c => c.id === editingId).facturee : false,
+                commentaires: document.getElementById('commentaires').value,
+                participants: participants,
+            };
+
+            if (editingId) {
+                const index = clients.findIndex(c => c.id === editingId);
+                if (index !== -1) {
+                    clients[index] = newClient;
+                }
+            } else {
+                clients.push(newClient);
+            }
+
+            saveClients();
+            resetForm();
+            renderDashboard();
+            showSection('dashboard');
+        }
+
+        /**
+         * Rempli le formulaire avec les données d'un client pour modification.
+         * @param {number} id - L'ID du client à modifier.
+         */
+        function editClient(id) {
+            const client = clients.find(c => c.id === id);
+            if (!client) return;
+            
+            editingId = id;
+            document.getElementById('formTitle').textContent = `Modifier le dossier de ${client.participants[0].prenom} ${client.participants[0].nom}`;
+
+            document.getElementById('boxId').value = client.boxId;
+            form.typeBox.value = client.typeBox;
+            updateStationDropdown(); // Met à jour la liste des stations
+            form.station.value = client.station;
+            form.dates.value = client.dates;
+            form.nbParticipants.value = client.participants.length;
+            document.getElementById('commentaires').value = client.commentaires || '';
+            renderParticipantFields(client.participants.length, client.participants);
+            
+            showSection('form');
+        }
+
+        /**
+         * Supprime un client de la liste.
+         * @param {number} id - L'ID du client à supprimer.
+         */
+        function deleteClient(id) {
+            if (confirm("Êtes-vous sûr de vouloir supprimer ce dossier client ?")) {
+                clients = clients.filter(c => c.id !== id);
+                saveClients();
+                renderDashboard();
+            }
+        }
+        
+        /**
+         * Met à jour le statut de facturation et la couleur du bouton.
+         * @param {number} id - L'ID du client.
+         */
+        function updateFactureStatus(id) {
+            const client = clients.find(c => c.id === id);
+            if (client) {
+                client.facturee = !client.facturee;
+                saveClients();
+                renderDashboard(); // Re-rendu pour mettre à jour le tableau
+            }
+        }
+        
+        /**
+         * Affiche les commentaires d'un dossier dans une pop-up.
+         * @param {number} id - L'ID du client.
+         */
+        function showComment(id) {
+            const client = clients.find(c => c.id === id);
+            if (client && client.commentaires) {
+                alert(`Commentaires pour le dossier ${client.boxId}:\n\n${client.commentaires}`);
+            } else {
+                alert("Aucun commentaire pour ce dossier.");
+            }
+        }
+
+
+        // --- Fonctions d'affichage et de rendu ---
+
+        /**
+         * Met à jour le tableau de bord avec les clients actuels en appliquant les filtres.
+         */
+        function renderDashboard() {
+            const tableBody = document.querySelector('#clientsTable tbody');
+            const noClientsMessage = document.getElementById('noClientsMessage');
+            const table = document.getElementById('clientsTable');
+            tableBody.innerHTML = ''; // Vide le tableau
+
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const boxTypeFilter = document.getElementById('boxTypeFilter').value;
+            const stationFilter = document.getElementById('stationFilter').value;
+
+            // Filtre les clients
+            const filteredClients = clients.filter(client => {
+                const matchesSearch = searchTerm === '' || 
+                                    client.boxId.toLowerCase().includes(searchTerm) ||
+                                    client.participants.some(p => 
+                                        p.nom.toLowerCase().includes(searchTerm) ||
+                                        p.prenom.toLowerCase().includes(searchTerm) ||
+                                        (p.email && p.email.toLowerCase().includes(searchTerm)) ||
+                                        (p.telephone && p.telephone.toLowerCase().includes(searchTerm))
+                                    );
+                const matchesBoxType = boxTypeFilter === '' || client.typeBox === boxTypeFilter;
+                const matchesStation = stationFilter === '' || client.station === stationFilter;
+                
+                return matchesSearch && matchesBoxType && matchesStation;
+            });
+
+            if (filteredClients.length === 0) {
+                noClientsMessage.style.display = 'block';
+                table.style.display = 'none';
+            } else {
+                noClientsMessage.style.display = 'none';
+                table.style.display = 'table';
+                filteredClients.forEach(client => {
+                    const mainParticipant = client.participants[0];
+                    const row = tableBody.insertRow();
+                    row.innerHTML = `
+                        <td>${mainParticipant.prenom} ${mainParticipant.nom}</td>
+                        <td>${client.boxId}</td>
+                        <td>${client.typeBox}</td>
+                        <td>${client.station}</td>
+                        <td>
+                            <select class="status-select status-${client.statut.replace(/\s/g, '-')}" onchange="updateClientStatus(${client.id}, this.value, this)">
+                                ${statuses.map(s => `<option value="${s}" ${s === client.statut ? 'selected' : ''}>${s}</option>`).join('')}
+                            </select>
+                        </td>
+                        <td>
+                           <button class="facture-button ${client.facturee ? 'facture-oui' : 'facture-non'}" onclick="updateFactureStatus(${client.id})">
+                              ${client.facturee ? 'Facturé' : 'Non facturé'}
+                           </button>
+                        </td>
+                        <td>
+                            <button class="edit-btn" onclick="editClient(${client.id})">Voir / Modifier</button>
+                            <button class="comment-btn" onclick="showComment(${client.id})">Commentaires</button>
+                            <button class="delete-btn" onclick="deleteClient(${client.id})">Supprimer</button>
+                            <button class="mail-btn" onclick="generateMail(${client.id})">Générer mail</button>
+                        </td>
+                    `;
+                });
+            }
+        }
+        
+        /**
+         * Met à jour le statut d'un client et son style.
+         * @param {number} id - L'ID du client.
+         * @param {string} newStatus - Le nouveau statut.
+         * @param {HTMLElement} element - L'élément select qui a déclenché l'événement.
+         */
+        function updateClientStatus(id, newStatus, element) {
+            const client = clients.find(c => c.id === id);
+            if (client) {
+                client.statut = newStatus;
+                saveClients();
+                // Mise à jour de la classe pour le style
+                element.className = ''; // Réinitialise les classes
+                element.classList.add('status-select', `status-${newStatus.replace(/\s/g, '-')}`);
+            }
+        }
+
+        /**
+         * Met à jour la liste déroulante des stations en fonction de la box sélectionnée.
+         */
+        function updateStationDropdown() {
+            const selectedBox = document.getElementById('typeBox').value;
+            const stationSelect = document.getElementById('station');
+            stationSelect.innerHTML = '<option value="">Sélectionner...</option>'; // Réinitialise
+            
+            if (selectedBox && boxStations[selectedBox]) {
+                boxStations[selectedBox].forEach(station => {
+                    const option = document.createElement('option');
+                    option.value = station;
+                    option.textContent = station;
+                    stationSelect.appendChild(option);
+                });
+            }
+        }
+
+        /**
+         * Génère dynamiquement les champs du formulaire pour le nombre de participants.
+         * @param {number} count - Le nombre de participants.
+         * @param {Array} data - Les données des participants pour l'édition (optionnel).
+         */
+        function renderParticipantFields(count, data = []) {
+            participantsContainer.innerHTML = ''; // Vide le conteneur
+            
+            for (let i = 0; i < count; i++) {
+                const participant = data[i] || {};
+                const participantHtml = `
+                    <div class="participant-container">
+                        <h3>Participant ${i + 1}</h3>
+                        <div class="form-group">
+                            <label for="nom-${i}">Nom :</label>
+                            <input type="text" id="nom-${i}" value="${participant.nom || ''}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="prenom-${i}">Prénom :</label>
+                            <input type="text" id="prenom-${i}" value="${participant.prenom || ''}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email-${i}">Email :</label>
+                            <input type="email" id="email-${i}" value="${participant.email || ''}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="telephone-${i}">Téléphone :</label>
+                            <input type="tel" id="telephone-${i}" value="${participant.telephone || ''}">
+                        </div>
+                        <div class="form-group">
+                            <label for="adresse-${i}">Adresse postale :</label>
+                            <input type="text" id="adresse-${i}" value="${participant.adresse || ''}">
+                        </div>
+                    </div>
+                `;
+                participantsContainer.innerHTML += participantHtml;
+            }
+        }
+        
+        /**
+         * Génère et affiche le contenu d'un mail pour un client.
+         * @param {number} id - L'ID du client.
+         */
+        function generateMail(id) {
+            const client = clients.find(c => c.id === id);
+            if (!client) return;
+            
+            const mainParticipant = client.participants[0];
+            const numParticipants = client.participants.length;
+            const boxType = client.typeBox;
+            const station = client.station;
+            
+            // Récupère les détails de la box et de la station
+            const boxInfo = boxDetails[boxType];
+            const composition = boxInfo.composition[station] || "Composition non disponible.";
+            
+            let prix_box;
+            let prix_box_10_percent;
+
+            if (boxType === "BOX Eveil des sens") {
+                prix_box = `pour les soins ${boxInfo.price_soins} et pour le restaurant ${boxInfo.price_restaurant}`;
+                prix_box_10_percent = `pour les soins ${boxInfo.price_10_percent_soins} et pour le restaurant ${boxInfo.price_10_percent_restaurant}`;
+            } else if (boxType === "Box Le séjour des Accros du Peignoir") {
+                prix_box = `pour les soins ${boxInfo.price_soins} et pour l’hôtellerie ${boxInfo.price_hotellerie}`;
+                prix_box_10_percent = `pour les soins ${boxInfo.price_10_percent_soins} et pour l’hôtellerie ${boxInfo.price_10_percent_hotellerie}`;
+            } else if (boxType === "Box Le séjour des Accros du Peignoir PREMIUM") {
+                prix_box = `pour les soins ${boxInfo.price_soins} et pour l’hôtellerie ${boxInfo.price_hotellerie}`;
+                prix_box_10_percent = `pour les soins ${boxInfo.price_10_percent_soins} et pour l’hôtellerie ${boxInfo.price_10_percent_hotellerie}`;
+            } else {
+                prix_box = boxInfo.price;
+                prix_box_10_percent = boxInfo.price_10_percent_off;
+            }
+
+            // Construire la liste des informations des clients
+            let clientInfoString = '';
+            client.participants.forEach((p, index) => {
+                clientInfoString += `
+Informations du participant ${index + 1} :
+Nom : ${p.nom}
+Prénom : ${p.prenom}
+Email : ${p.email}
+Téléphone : ${p.telephone || 'Non renseigné'}
+Adresse : ${p.adresse || 'Non renseignée'}
+`;
+            });
+
+            // Remplacement des variables dans le modèle de corps du mail
+            const mailBody = mailBodyTemplate
+                .replace(/{{Sexe}}/g, 'Monsieur ou Madame')
+                .replace(/{{Nom et prénom du client}}/g, `${mainParticipant.nom} ${mainParticipant.prenom}`)
+                .replace(/{{Type de Box}}/g, boxType)
+                .replace(/{{Ville\/ Station choisi pour réaliser la box}}/g, station)
+                .replace(/{{Nombre de client participant}}/g, numParticipants)
+                .replace(/{{Composition de la Box}}/g, composition)
+                .replace(/{{Prix de la box}}/g, prix_box)
+                .replace(/{{Prix de la box - 10%}}/g, prix_box_10_percent)
+                .replace(/{{Date souhaitait par le client}}/g, client.dates || 'Non renseignées')
+                .replace(/{{Ensemble des informations des clients}}/g, clientInfoString);
+            
+            document.getElementById('mailSubject').textContent = mailSubjectTemplate;
+            document.getElementById('mailBody').textContent = mailBody;
+            showSection('mailGenerator');
+        }
+
+        /**
+         * Génère et affiche le contenu du mail d'activation.
+         * @param {number} numClients - Le nombre de clients (1 ou 2).
+         */
+        function generateActivationMail(numClients) {
+            const container = document.getElementById('activationMailContainer');
+            const subjectContent = document.getElementById('activationMailSubject');
+            const bodyContent = document.getElementById('activationMailBody');
+
+            container.style.display = 'block';
+
+            subjectContent.textContent = activationMailSubjectTemplate;
+
+            if (numClients === 1) {
+                bodyContent.textContent = activationMailBodyTemplate1;
+            } else if (numClients === 2) {
+                bodyContent.textContent = activationMailBodyTemplate2;
+            }
+        }
+        
+        /**
+         * Copie l'objet du mail dans le presse-papiers.
+         */
+        function copyMailSubject() {
+            const mailContent = document.getElementById('mailSubject').textContent;
+            navigator.clipboard.writeText(mailContent).then(() => {
+                alert("L'objet du mail a été copié !");
+            }).catch(err => {
+                console.error("Erreur lors de la copie de l'objet du mail : ", err);
+                alert("Erreur lors de la copie. Veuillez copier le texte manuellement.");
+            });
+        }
+        
+        /**
+         * Copie le corps du mail dans le presse-papiers.
+         */
+        function copyMailBody() {
+            const mailContent = document.getElementById('mailBody').textContent;
+            navigator.clipboard.writeText(mailContent).then(() => {
+                alert('Le corps du mail a été copié !');
+            }).catch(err => {
+                console.error('Erreur lors de la copie du corps du mail : ', err);
+                alert('Erreur lors de la copie. Veuillez copier le texte manuellement.');
+            });
+        }
+
+        /**
+         * Copie l'objet du mail d'activation dans le presse-papiers.
+         */
+        function copyActivationMailSubject() {
+            const mailContent = document.getElementById('activationMailSubject').textContent;
+            navigator.clipboard.writeText(mailContent).then(() => {
+                alert("L'objet du mail d'activation a été copié !");
+            }).catch(err => {
+                console.error("Erreur lors de la copie de l'objet du mail d'activation : ", err);
+                alert("Erreur lors de la copie. Veuillez copier le texte manuellement.");
+            });
+        }
+
+        /**
+         * Copie le corps du mail d'activation dans le presse-papiers.
+         */
+        function copyActivationMailBody() {
+            const mailContent = document.getElementById('activationMailBody').textContent;
+            navigator.clipboard.writeText(mailContent).then(() => {
+                alert('Le corps du mail d\'activation a été copié !');
+            }).catch(err => {
+                console.error('Erreur lors de la copie du corps du mail d\'activation : ', err);
+                alert('Erreur lors de la copie. Veuillez copier le texte manuellement.');
+            });
+        }
+        
+        /**
+         * Remplit le filtre des stations avec toutes les stations disponibles.
+         */
+        function populateStationFilter() {
+            const stationFilter = document.getElementById('stationFilter');
+            const allStations = new Set();
+            Object.values(boxStations).forEach(stations => {
+                stations.forEach(station => allStations.add(station));
+            });
+
+            Array.from(allStations).sort().forEach(station => {
+                const option = document.createElement('option');
+                option.value = station;
+                option.textContent = station;
+                stationFilter.appendChild(option);
+            });
+        }
+
+        // --- Initialisation de l'application ---
+
+        /**
+         * Fonction d'initialisation appelée au chargement de la page.
+         */
+        function initializeApp() {
+            // Écouteurs d'événements
+            document.getElementById('typeBox').addEventListener('change', updateStationDropdown);
+            document.getElementById('nbParticipants').addEventListener('change', (e) => {
+                renderParticipantFields(e.target.value);
+            });
+            document.getElementById('searchInput').addEventListener('input', renderDashboard);
+            document.getElementById('boxTypeFilter').addEventListener('change', renderDashboard);
+            document.getElementById('stationFilter').addEventListener('change', renderDashboard);
+
+            // Écouteur d'événement pour le formulaire
+            form.addEventListener('submit', handleFormSubmit);
+
+            // Rendu initial
+            renderParticipantFields(1);
+            populateStationFilter();
+            loadClients();
+        }
+
+        // Appelle la fonction d'initialisation au chargement de la page
+        document.addEventListener('DOMContentLoaded', initializeApp);
+
+        // Fin du JavaScript
+    </script>
+</body>
+</html>
