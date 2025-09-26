@@ -1,14 +1,395 @@
 <!DOCTYPE html>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM "Accros du Peignoir"</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        /* Début du CSS */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            background: #fff;
+            padding: 20px 40px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1, h2 {
+            color: #0056b3;
+        }
+        .nav-buttons {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+        }
+        .nav-buttons button {
+            padding: 10px 15px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .nav-buttons button:hover {
+            background-color: #0056b3;
+        }
+        .activation-btn { 
+            background-color: #6c757d; /* Couleur différente pour le distinguer */
+            color: white;
+            border-radius: 5px;
+            padding: 10px 15px;
+            margin-left: auto; /* Pousse le bouton à droite */
+        }
+        .activation-btn:hover {
+            background-color: #5a6268;
+        }
+        .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+        }
+        /* Style du tableau de bord */
+        .dashboard-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .dashboard-controls input, .dashboard-controls select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .dashboard-controls input {
+            flex-grow: 1;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        td button {
+            padding: 5px 10px;
+            margin-right: 5px;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+        }
+        .edit-btn { background-color: #28a745; }
+        .delete-btn { background-color: #dc3545; }
+        .mail-btn { background-color: #ffc107; }
+        .comment-btn { background-color: #17a2b8; }
+
+
+        /* Nouveaux styles pour les statuts */
+        .status-select {
+            border: none;
+            padding: 5px 8px;
+            color: white;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .status-Non-traité {
+            background-color: #dc3545; /* Rouge */
+        }
+        .status-Mail-envoyé {
+            background-color: #ffc107; /* Orange */
+        }
+        .status-Validé {
+            background-color: #28a745; /* Vert */
+        }
+        
+        /* Styles pour le bouton de facturation */
+        .facture-button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .facture-non {
+            background-color: #ff6347; /* Rouge */
+        }
+        .facture-oui {
+            background-color: #3cb371; /* Vert */
+        }
+
+        /* Style du formulaire */
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        .form-buttons {
+            margin-top: 20px;
+        }
+        .form-buttons button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .form-buttons button:hover {
+            background-color: #0056b3;
+        }
+        .participant-container {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+        /* Style pour le générateur de mail */
+        .mail-block {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        .mail-content {
+            white-space: pre-wrap;
+            background-color: #fff;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        .copy-btn {
+            padding: 10px 15px;
+            margin-top: 10px;
+            border: none;
+            background-color: #28a745;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .copy-btn:hover {
+            background-color: #218838;
+        }
+        .mail-choice-btn {
+            padding: 15px 25px;
+            margin: 10px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .mail-choice-btn:hover {
+            background-color: #0056b3;
+        }
+        .mail-content-display {
+            border: 1px solid #ccc;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            margin-top: 20px;
+            white-space: pre-wrap;
+        }
+        /* Fin du CSS */
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>CRM "Accros du Peignoir"</h1>
+
+        <div class="nav-buttons">
+            <button onclick="showSection('dashboard')">Tableau de bord</button>
+            <button onclick="showSection('form')">Ajouter un dossier</button>
+            <button class="activation-btn" onclick="showSection('mailActivation')">Mail d'activation de Box</button>
+        </div>
+        
+        <div id="dashboard" class="section active">
+            <h2>Dossiers clients</h2>
+            <div class="dashboard-controls">
+                <input type="text" id="searchInput" placeholder="Rechercher par nom, mail, box ID...">
+                <select id="boxTypeFilter">
+                    <option value="">Filtrer par type de box</option>
+                    <option value="BOX Premiers émois thermaux">BOX Premiers émois thermaux</option>
+                    <option value="Box Divine évasion au spa">Box Divine évasion au spa</option>
+                    <option value="BOX Eveil des sens">BOX Eveil des sens</option>
+                    <option value="Box Le séjour des Accros du Peignoir">Box Le séjour des Accros du Peignoir</option>
+                    <option value="Box Le séjour des Accros du Peignoir PREMIUM">Box Le séjour des Accros du Peignoir PREMIUM</option>
+                </select>
+                <select id="stationFilter">
+                    <option value="">Filtrer par station</option>
+                    </select>
+            </div>
+            <p id="noClientsMessage">Aucun client enregistré.</p>
+            <div style="overflow-x:auto;">
+                <table id="clientsTable">
+                    <thead>
+                        <tr>
+                            <th>Nom & Prénom</th>
+                            <th>ID de box</th>
+                            <th>Type de box</th>
+                            <th>Station thermale</th>
+                            <th>Statut</th>
+                            <th>Facturé</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="form" class="section">
+            <h2 id="formTitle">Ajouter un nouveau dossier</h2>
+            <form id="clientForm">
+                <input type="hidden" id="clientId">
+                
+                <div class="form-group">
+                    <label for="boxId">ID de la box :</label>
+                    <input type="text" id="boxId" placeholder="Ex: AX123456" required>
+                </div>
+                <div class="form-group">
+                    <label for="typeBox">Type de box :</label>
+                    <select id="typeBox" required>
+                        <option value="">Sélectionner...</option>
+                        <option value="BOX Premiers émois thermaux">BOX Premiers émois thermaux</option>
+                        <option value="Box Divine évasion au spa">Box Divine évasion au spa</option>
+                        <option value="BOX Eveil des sens">BOX Eveil des sens</option>
+                        <option value="Box Le séjour des Accros du Peignoir">Box Le séjour des Accros du Peignoir</option>
+                        <option value="Box Le séjour des Accros du Peignoir PREMIUM">Box Le séjour des Accros du Peignoir PREMIUM</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="station">Station thermale :</label>
+                    <select id="station" required>
+                        <option value="">Sélectionner...</option>
+                        </select>
+                </div>
+                <div class="form-group">
+                    <label for="dates">Dates souhaitées :</label>
+                    <input type="text" id="dates" placeholder="Ex: 01/10/2025 - 15/10/2025">
+                </div>
+
+                <div class="form-group">
+                    <label for="nbParticipants">Nombre de participants :</label>
+                    <select id="nbParticipants" required>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>
+                </div>
+
+                <div id="participantsContainer">
+                    </div>
+
+                <div class="form-group">
+                    <label for="commentaires">Commentaires :</label>
+                    <textarea id="commentaires" placeholder="Ajouter des notes, des détails supplémentaires..."></textarea>
+                </div>
+                
+                <div class="form-buttons">
+                    <button type="submit">Sauvegarder le dossier</button>
+                    <button type="reset" onclick="resetForm()">Annuler</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="mailGenerator" class="section">
+            <h2>Générateur de mail</h2>
+
+            <div class="mail-block">
+                <h3>Objet du mail :</h3>
+                <div id="mailSubject" class="mail-content"></div>
+                <button class="copy-btn" onclick="copyMailSubject()">Copier l'objet</button>
+            </div>
+            
+            <div class="mail-block">
+                <h3>Corps du mail :</h3>
+                <div id="mailBody" class="mail-content"></div>
+                <button class="copy-btn" onclick="copyMailBody()">Copier le corps du mail</button>
+            </div>
+
+            <button onclick="showSection('dashboard')">Retour au tableau de bord</button>
+        </div>
+
+        <div id="mailActivation" class="section">
+            <h2>Générateur de mail d'activation</h2>
+            <p>Veuillez choisir le nombre de clients :</p>
+            <button class="mail-choice-btn" onclick="generateActivationMail(1)">1 personne</button>
+            <button class="mail-choice-btn" onclick="generateActivationMail(2)">2 personnes</button>
+
+            <div id="activationMailContainer" style="display:none;">
+                <div class="mail-block">
+                    <h3>Objet du mail :</h3>
+                    <div id="activationMailSubject" class="mail-content"></div>
+                    <button class="copy-btn" onclick="copyActivationMailSubject()">Copier l'objet</button>
+                </div>
+                
+                <div class="mail-block">
+                    <h3>Corps du mail :</h3>
+                    <div id="activationMailBody" class="mail-content"></div>
+                    <button class="copy-btn" onclick="copyActivationMailBody()">Copier le corps du mail</button>
+                </div>
+
+                <button onclick="showSection('dashboard')">Retour au tableau de bord</button>
+            </div>
+        </div>
+
+    </div>
 
     <script>
-        // Configuration de Supabase
-        const SUPABASE_URL = 'https://reaqsrlhdxpvpozwelmq.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlYXFzcmxoZHhwdnBvendlbG1xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MjI1MTMsImV4cCI6MjA3NDE5ODUxM30.HouILqtaoOkrBGPk8lhJzrePAmGWkftyxM--CVlBvsE';
-        const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Début du JavaScript
+
+        // =========================================================================================
+        // NOUVEAU : Configuration Supabase
+        // !!! REMPLACEZ CES VALEURS PAR VOTRE URL ET VOTRE CLÉ PUBLIQUE !!!
+        const SUPABASE_URL = 'https://reaqsrlhdxpvpozwelmq.supabase.co'; 
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlYXFzcmxoZHhwdnBvendlbG1xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MjI1MTMsImV4cCI6MjA3NDE5ODUxM30.HouILqtaoOkrBGPk8lhJzrePAmGWkftyxM--CVlBvsE'; 
+        const TABLE_NAME = 'clients_dossiers'; // Nom de la table dans votre base Supabase
+        
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // =========================================================================================
+
 
         // Constantes et variables
-        const CLIENTS_STORAGE_KEY = 'clients';
+        const CLIENTS_STORAGE_KEY = 'clients'; // Cette variable n'est plus utilisée pour le stockage réel
         const participantsContainer = document.getElementById('participantsContainer');
         const form = document.getElementById('clientForm');
         let clients = [];
@@ -189,37 +570,75 @@ Cordialement,
             renderParticipantFields(1); // Affiche 1 participant par défaut
         }
 
-        // --- Fonctions de gestion des données LocalStorage ---
+        // --- Fonctions CRUD (Créer, Lire, Mettre à jour, Supprimer) avec Supabase ---
 
         /**
-         * Charge les clients depuis le LocalStorage.
+         * Charge les clients depuis Supabase.
          */
-        function loadClients() {
-            const data = localStorage.getItem(CLIENTS_STORAGE_KEY);
-            clients = data ? JSON.parse(data) : [];
-            // Assurez-vous que chaque client a les propriétés facturee et commentaires
-            clients.forEach(client => {
-                if (typeof client.facturee === 'undefined') {
-                    client.facturee = false;
-                }
-                if (typeof client.commentaires === 'undefined') {
-                    client.commentaires = '';
-                }
-            });
+        async function loadClients() {
+            console.log("Chargement des clients depuis Supabase...");
+            const { data, error } = await supabase
+                .from(TABLE_NAME)
+                .select('*')
+                .order('id', { ascending: false }); // Tri par le plus récent
+
+            if (error) {
+                console.error("Erreur lors du chargement des clients:", error);
+                clients = [];
+            } else {
+                // Utilise les données de Supabase et assure la rétrocompatibilité des propriétés
+                clients = data.map(client => ({
+                    ...client,
+                    facturee: typeof client.facturee === 'undefined' ? false : client.facturee,
+                    commentaires: client.commentaires || '',
+                }));
+            }
             renderDashboard();
         }
 
         /**
-         * Sauvegarde les clients dans le LocalStorage.
+         * Fonction pour sauvegarder/mettre à jour un client dans Supabase.
+         * @param {object} clientData - Les données du client à insérer ou mettre à jour.
          */
-        function saveClients() {
-            localStorage.setItem(CLIENTS_STORAGE_KEY, JSON.stringify(clients));
+        async function saveClient(clientData) {
+            if (clientData.id) {
+                // MODIFICATION (UPDATE)
+                const { error } = await supabase
+                    .from(TABLE_NAME)
+                    .update(clientData)
+                    .eq('id', clientData.id); // Utilise l'ID Supabase pour la mise à jour
+
+                if (error) {
+                    console.error("Erreur lors de la modification du client:", error);
+                    alert("Erreur lors de la modification du dossier.");
+                }
+            } else {
+                // CRÉATION (INSERT)
+                // Retire l'ID temporaire pour laisser Supabase générer le sien
+                delete clientData.id; 
+                const { data, error } = await supabase
+                    .from(TABLE_NAME)
+                    .insert([clientData])
+                    .select(); // Récupère le client inséré avec son ID Supabase
+
+                if (error) {
+                    console.error("Erreur lors de l'ajout du client:", error);
+                    alert("Erreur lors de l'ajout du dossier.");
+                } else if (data && data.length > 0) {
+                    // Ajoute le nouveau client (avec son ID Supabase) à la liste locale
+                    clients.unshift(data[0]); 
+                }
+            }
+            
+            // Après toute opération, on recharge les données.
+            await loadClients(); 
+            resetForm();
+            showSection('dashboard');
         }
 
-        // --- Fonctions CRUD (Créer, Lire, Mettre à jour, Supprimer) ---
 
         /**
-         * Ajoute un nouveau client ou modifie un client existant.
+         * Ajoute un nouveau client ou modifie un client existant via Supabase.
          * @param {Event} event - L'événement de soumission du formulaire.
          */
         function handleFormSubmit(event) {
@@ -237,31 +656,22 @@ Cordialement,
                 });
             }
 
-            const newClient = {
-                id: editingId || Date.now(),
+            const clientToSave = {
+                // Si editingId existe, on le passe pour une UPDATE
+                id: editingId, 
                 boxId: document.getElementById('boxId').value,
                 typeBox: form.typeBox.value,
                 station: form.station.value,
                 dates: form.dates.value,
+                // Récupère le statut et le statut de facturation du client actuel
                 statut: editingId ? clients.find(c => c.id === editingId).statut : 'Non traité',
                 facturee: editingId ? clients.find(c => c.id === editingId).facturee : false,
                 commentaires: document.getElementById('commentaires').value,
-                participants: participants,
+                participants: participants, // Stocké comme JSONB
             };
 
-            if (editingId) {
-                const index = clients.findIndex(c => c.id === editingId);
-                if (index !== -1) {
-                    clients[index] = newClient;
-                }
-            } else {
-                clients.push(newClient);
-            }
-
-            saveClients();
-            resetForm();
-            renderDashboard();
-            showSection('dashboard');
+            // Envoi des données à Supabase
+            saveClient(clientToSave);
         }
 
         /**
@@ -288,30 +698,78 @@ Cordialement,
         }
 
         /**
-         * Supprime un client de la liste.
-         * @param {number} id - L'ID du client à supprimer.
+         * Supprime un client de la liste dans Supabase.
+         * @param {number} id - L'ID (Supabase) du client à supprimer.
          */
-        function deleteClient(id) {
+        async function deleteClient(id) {
             if (confirm("Êtes-vous sûr de vouloir supprimer ce dossier client ?")) {
-                clients = clients.filter(c => c.id !== id);
-                saveClients();
-                renderDashboard();
+                const { error } = await supabase
+                    .from(TABLE_NAME)
+                    .delete()
+                    .eq('id', id);
+
+                if (error) {
+                    console.error("Erreur lors de la suppression:", error);
+                    alert("Erreur lors de la suppression du dossier.");
+                } else {
+                    // Met à jour la liste locale
+                    clients = clients.filter(c => c.id !== id);
+                    renderDashboard();
+                }
             }
         }
         
         /**
-         * Met à jour le statut de facturation et la couleur du bouton.
-         * @param {number} id - L'ID du client.
+         * Met à jour le statut de facturation et la couleur du bouton dans Supabase.
+         * @param {number} id - L'ID (Supabase) du client.
          */
-        function updateFactureStatus(id) {
+        async function updateFactureStatus(id) {
             const client = clients.find(c => c.id === id);
             if (client) {
-                client.facturee = !client.facturee;
-                saveClients();
-                renderDashboard(); // Re-rendu pour mettre à jour le tableau
+                const newFactureeStatus = !client.facturee;
+
+                const { error } = await supabase
+                    .from(TABLE_NAME)
+                    .update({ facturee: newFactureeStatus })
+                    .eq('id', id);
+                    
+                if (error) {
+                    console.error("Erreur mise à jour facturation:", error);
+                    alert("Erreur lors de la mise à jour du statut de facturation.");
+                } else {
+                    // Met à jour la liste locale et l'affichage
+                    client.facturee = newFactureeStatus;
+                    renderDashboard(); 
+                }
             }
         }
         
+        /**
+         * Met à jour le statut d'un client et son style dans Supabase.
+         * @param {number} id - L'ID (Supabase) du client.
+         * @param {string} newStatus - Le nouveau statut.
+         * @param {HTMLElement} element - L'élément select qui a déclenché l'événement.
+         */
+        async function updateClientStatus(id, newStatus, element) {
+            const client = clients.find(c => c.id === id);
+            if (client) {
+                const { error } = await supabase
+                    .from(TABLE_NAME)
+                    .update({ statut: newStatus })
+                    .eq('id', id);
+
+                if (error) {
+                    console.error("Erreur mise à jour statut:", error);
+                    alert("Erreur lors de la mise à jour du statut.");
+                } else {
+                    // Met à jour la liste locale et le style
+                    client.statut = newStatus;
+                    element.className = ''; 
+                    element.classList.add('status-select', `status-${newStatus.replace(/\s/g, '-')}`);
+                }
+            }
+        }
+
         /**
          * Affiche les commentaires d'un dossier dans une pop-up.
          * @param {number} id - L'ID du client.
@@ -326,7 +784,7 @@ Cordialement,
         }
 
 
-        // --- Fonctions d'affichage et de rendu ---
+        // --- Fonctions d'affichage et de rendu (Pas de changement Supabase ici) ---
 
         /**
          * Met à jour le tableau de bord avec les clients actuels en appliquant les filtres.
@@ -393,21 +851,12 @@ Cordialement,
         }
         
         /**
-         * Met à jour le statut d'un client et son style.
-         * @param {number} id - L'ID du client.
-         * @param {string} newStatus - Le nouveau statut.
-         * @param {HTMLElement} element - L'élément select qui a déclenché l'événement.
+         * NOTE: saveClients() n'est plus nécessaire.
          */
-        function updateClientStatus(id, newStatus, element) {
-            const client = clients.find(c => c.id === id);
-            if (client) {
-                client.statut = newStatus;
-                saveClients();
-                // Mise à jour de la classe pour le style
-                element.className = ''; // Réinitialise les classes
-                element.classList.add('status-select', `status-${newStatus.replace(/\s/g, '-')}`);
-            }
+        function saveClients() {
+            // Laissez vide ou retirez - la sauvegarde est gérée par saveClient(clientData) vers Supabase
         }
+
 
         /**
          * Met à jour la liste déroulante des stations en fonction de la box sélectionnée.
@@ -642,14 +1091,14 @@ Adresse : ${p.adresse || 'Non renseignée'}
             // Rendu initial
             renderParticipantFields(1);
             populateStationFilter();
-            loadClients();
+            // Utilise loadClients() pour charger les données depuis Supabase
+            loadClients(); 
         }
 
         // Appelle la fonction d'initialisation au chargement de la page
         document.addEventListener('DOMContentLoaded', initializeApp);
 
+        // Fin du JavaScript
     </script>
 </body>
 </html>
-
-
