@@ -676,74 +676,80 @@ Cordialement,
          * Rempli le formulaire avec les données d'un client pour modification.
          * @param {number} id - L'ID du client à modifier.
          */
-        function editClient(id) {
-            const clientId = Number(id); // <--- CORRECTION ID : Convertit l'ID string en nombre
-            const client = clients.find(c => c.id === clientId);
-            if (!client) return;
-            
-            editingId = clientId;
-            document.getElementById('formTitle').textContent = `Modifier le dossier de ${client.participants[0].prenom} ${client.participants[0].nom}`;
+function editClient(id) {
+    // L'ID est passé comme une chaîne de caractères
+    const client = clients.find(c => String(c.id) === id); 
+    if (!client) {
+        console.error("Client non trouvé lors de l'édition pour l'ID:", id); 
+        return;
+    }
+    
+    editingId = client.id;
+    document.getElementById('formTitle').textContent = `Modifier le dossier de ${client.participants[0].prenom} ${client.participants[0].nom}`;
 
-            document.getElementById('boxId').value = client.boxId;
-            form.typeBox.value = client.typeBox;
-            updateStationDropdown(); // Met à jour la liste des stations
-            form.station.value = client.station;
-            form.dates.value = client.dates;
-            form.nbParticipants.value = client.participants.length;
-            document.getElementById('commentaires').value = client.commentaires || '';
-            renderParticipantFields(client.participants.length, client.participants);
-            
-            showSection('form');
-        }
+    document.getElementById('boxId').value = client.boxId;
+    form.typeBox.value = client.typeBox;
+    updateStationDropdown(); // Met à jour la liste des stations
+    form.station.value = client.station;
+    form.dates.value = client.dates;
+    form.nbParticipants.value = client.participants.length;
+    document.getElementById('commentaires').value = client.commentaires || '';
+    renderParticipantFields(client.participants.length, client.participants);
+    
+    showSection('form');
+}
 
         /**
          * Supprime un client de la liste dans Supabase.
          * @param {number} id - L'ID (Supabase) du client à supprimer.
          */
-        async function deleteClient(id) {
-            const clientId = Number(id); // <--- CORRECTION ID : Convertit l'ID string en nombre
-            if (confirm("Êtes-vous sûr de vouloir supprimer ce dossier client ?")) {
-                const { error } = await supabaseClient
-                    .from(TABLE_NAME)
-                    .delete()
-                    .eq('id', clientId);
+       async function deleteClient(id) {
+    // L'ID est passé comme une chaîne de caractères
+    const client = clients.find(c => String(c.id) === id);
+    if (!client) return;
 
-                if (error) {
-                    console.error("Erreur lors de la suppression:", error);
-                    alert("Erreur lors de la suppression du dossier.");
-                } else {
-                    // Met à jour la liste locale
-                    clients = clients.filter(c => c.id !== clientId);
-                    renderDashboard();
-                }
-            }
+    if (confirm("Êtes-vous sûr de vouloir supprimer ce dossier client ?")) {
+        const { error } = await supabaseClient
+            .from(TABLE_NAME)
+            .delete()
+            .eq('id', client.id); // Utilisation de l'ID string (UUID)
+
+        if (error) {
+            console.error("Erreur lors de la suppression:", error);
+            alert("Erreur lors de la suppression du dossier.");
+        } else {
+            // Met à jour la liste locale
+            clients = clients.filter(c => c.id !== client.id);
+            renderDashboard();
         }
+    }
+}
         
         /**
          * Met à jour le statut de facturation et la couleur du bouton dans Supabase.
          * @param {number} id - L'ID (Supabase) du client.
          */
-        async function updateFactureStatus(id) {
-            const clientId = Number(id); // <--- CORRECTION ID : Convertit l'ID string en nombre
-            const client = clients.find(c => c.id === clientId);
-            if (client) {
-                const newFactureeStatus = !client.facturee;
+       async function updateFactureStatus(id) {
+    // L'ID est passé comme une chaîne de caractères
+    const client = clients.find(c => String(c.id) === id);
+    if (client) {
+        const newFactureeStatus = !client.facturee;
 
-                const { error } = await supabaseClient
-                    .from(TABLE_NAME)
-                    .update({ facturee: newFactureeStatus })
-                    .eq('id', clientId);
-                    
-                if (error) {
-                    console.error("Erreur mise à jour facturation:", error);
-                    alert("Erreur lors de la mise à jour du statut de facturation.");
-                } else {
-                    // Met à jour la liste locale et l'affichage
-                    client.facturee = newFactureeStatus;
-                    renderDashboard(); 
-                }
-            }
+        const { error } = await supabaseClient
+            .from(TABLE_NAME)
+            .update({ facturee: newFactureeStatus })
+            .eq('id', client.id); // Utilisation de l'ID string (UUID)
+            
+        if (error) {
+            console.error("Erreur mise à jour facturation:", error);
+            alert("Erreur lors de la mise à jour du statut de facturation.");
+        } else {
+            // Met à jour la liste locale et l'affichage
+            client.facturee = newFactureeStatus;
+            renderDashboard(); 
         }
+    }
+}
         
         /**
          * Met à jour le statut d'un client et son style dans Supabase.
@@ -751,40 +757,40 @@ Cordialement,
          * @param {string} newStatus - Le nouveau statut.
          * @param {HTMLElement} element - L'élément select qui a déclenché l'événement.
          */
-        async function updateClientStatus(id, newStatus, element) {
-            const clientId = Number(id); // <--- CORRECTION ID : Convertit l'ID string en nombre
-            const client = clients.find(c => c.id === clientId);
-            if (client) {
-                const { error } = await supabaseClient
-                    .from(TABLE_NAME)
-                    .update({ statut: newStatus })
-                    .eq('id', clientId);
+       async function updateClientStatus(id, newStatus, element) {
+    // L'ID est passé comme une chaîne de caractères
+    const client = clients.find(c => String(c.id) === id);
+    if (client) {
+        const { error } = await supabaseClient
+            .from(TABLE_NAME)
+            .update({ statut: newStatus })
+            .eq('id', client.id); // Utilisation de l'ID string (UUID)
 
-                if (error) {
-                    console.error("Erreur mise à jour statut:", error);
-                    alert("Erreur lors de la mise à jour du statut.");
-                } else {
-                    // Met à jour la liste locale et le style
-                    client.statut = newStatus;
-                    element.className = ''; 
-                    element.classList.add('status-select', `status-${newStatus.replace(/\s/g, '-')}`);
-                }
-            }
+        if (error) {
+            console.error("Erreur mise à jour statut:", error);
+            alert("Erreur lors de la mise à jour du statut.");
+        } else {
+            // Met à jour la liste locale et le style
+            client.statut = newStatus;
+            element.className = ''; 
+            element.classList.add('status-select', `status-${newStatus.replace(/\s/g, '-')}`);
         }
+    }
+}
 
         /**
          * Affiche les commentaires d'un dossier dans une pop-up.
          * @param {number} id - L'ID du client.
          */
-        function showComment(id) {
-            const clientId = Number(id); // <--- CORRECTION ID : Convertit l'ID string en nombre
-            const client = clients.find(c => c.id === clientId);
-            if (client && client.commentaires) {
-                alert(`Commentaires pour le dossier ${client.boxId}:\n\n${client.commentaires}`);
-            } else {
-                alert("Aucun commentaire pour ce dossier.");
-            }
-        }
+      function showComment(id) {
+    // L'ID est passé comme une chaîne de caractères
+    const client = clients.find(c => String(c.id) === id);
+    if (client && client.commentaires) {
+        alert(`Commentaires pour le dossier ${client.boxId}:\n\n${client.commentaires}`);
+    } else {
+        alert("Aucun commentaire pour ce dossier.");
+    }
+}
 
 
         // --- Fonctions d'affichage et de rendu (Pas de changement Supabase ici) ---
@@ -857,13 +863,13 @@ Cordialement,
          * Génère et affiche le contenu d'un mail pour un client.
          * @param {number} id - L'ID du client.
          */
-        function generateMail(id) {
-            const clientId = Number(id); // <--- CORRECTION ID : Convertit l'ID string en nombre
-            const client = clients.find(c => c.id === clientId);
-            if (!client) return;
-            
-            const mainParticipant = client.participants[0];
-            const numParticipants = client.participants.length;
+function generateMail(id) {
+    // L'ID est passé comme une chaîne de caractères
+    const client = clients.find(c => String(c.id) === id);
+    if (!client) return;
+    
+    const mainParticipant = client.participants[0];
+    const numParticipants = client.participants.length;
             const boxType = client.typeBox;
             const station = client.station;
             
@@ -1098,5 +1104,6 @@ Adresse : ${p.adresse || 'Non renseignée'}
     </script>
 </body>
 </html>
+
 
 
