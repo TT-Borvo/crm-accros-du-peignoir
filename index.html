@@ -408,36 +408,32 @@
 
     </div> 
 <script>
-       // Début du bloc <script>
+// Début du JavaScript
 
         // =========================================================================================
-        // Variables Globales
+        // 1. Variables Globales (Vos variables existantes)
         // =========================================================================================
-        
-        // Constantes et variables de l'application (Vos variables existantes)
+        const CLIENTS_STORAGE_KEY = 'clients';
         const participantsContainer = document.getElementById('participantsContainer');
         const form = document.getElementById('clientForm');
         let clients = [];
-        let editingId = null; 
-        
+        let editingId = null;
+
         // =========================================================================================
-        // Configuration Supabase (Doit être ici pour éviter l'erreur de référence)
+        // 2. Configuration Supabase (CETTE PARTIE DOIT ÊTRE ICI)
         // =========================================================================================
-        const SUPABASE_URL = 'VOTRE_URL_SUPABASE'; 
-        const SUPABASE_ANON_KEY = 'VOTRE_CLE_ANON_PUBLIQUE'; 
+        const SUPABASE_URL = 'https://reaqsrlhdxpvpozwelmq.supabase.co'; 
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlYXFzcmxoZHhwdnBvendlbG1xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MjI1MTMsImV4cCI6MjA3NDE5ODUxM30.HouILqtaoOkrBGPk8lhJzrePAmGWkftyxM--CVlBvsE'; 
         const TABLE_NAME = 'clients'; 
         
-        // Initialisation du client Supabase
+        // La déclaration de 'supabase' doit se faire AVANT toute utilisation de ce nom
         const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); 
-        
+
         
         // =========================================================================================
-        // Fonctions d'Authentification (NOUVEAU CODE)
+        // 3. Fonctions d'Authentification (NOUVEAU CODE)
         // =========================================================================================
 
-        /**
-         * Gère l'inscription d'un nouvel utilisateur (à utiliser une seule fois).
-         */
         async function handleSignup() {
             const email = document.getElementById('authEmail').value;
             const password = document.getElementById('authPassword').value;
@@ -457,9 +453,6 @@
             }
         }
 
-        /**
-         * Gère la connexion d'un utilisateur existant.
-         */
         async function handleLogin() {
             const email = document.getElementById('authEmail').value;
             const password = document.getElementById('authPassword').value;
@@ -479,9 +472,6 @@
             }
         }
 
-        /**
-         * Gère la déconnexion.
-         */
         async function handleLogout() {
             const { error } = await supabase.auth.signOut();
             if (!error) {
@@ -489,9 +479,6 @@
             }
         }
 
-        /**
-         * Vérifie la session de l'utilisateur et bascule l'affichage (App/Connexion).
-         */
         async function checkUserSession() {
             const { data: { user } } = await supabase.auth.getUser();
 
@@ -499,7 +486,6 @@
                 // Utilisateur connecté : Afficher l'application
                 document.getElementById('authSection').style.display = 'none';
                 document.getElementById('appContent').style.display = 'block';
-                // Charge les données
                 loadClients();
             } else {
                 // Utilisateur non connecté : Afficher la page de connexion
@@ -507,9 +493,6 @@
             }
         }
 
-        /**
-         * Affiche la page de connexion et masque le contenu de l'application.
-         */
         function showAuthScreen() {
             document.getElementById('authSection').style.display = 'block';
             document.getElementById('appContent').style.display = 'none';
@@ -518,17 +501,10 @@
             document.getElementById('authPassword').value = '';
         }
 
-        // Fin des fonctions d'authentification
-        
         // =========================================================================================
-
-
-        // Constantes et variables
-        const participantsContainer = document.getElementById('participantsContainer');
-        const form = document.getElementById('clientForm');
-        let clients = [];
-        let editingId = null;
-
+        // 4. Modèles de mail et Données des Boxes (Vos constantes existantes, elles viennent ici)
+        // =========================================================================================
+        
         // Modèles de mail
         const mailSubjectTemplate = `Réservation Box Accros du Peignoir`;
         const mailBodyTemplate = `Bonjour,
@@ -709,24 +685,32 @@ Cordialement,
         /**
          * Charge les clients depuis Supabase.
          */
+/**
+         * Charge les clients depuis Supabase (au lieu de LocalStorage).
+         */
         async function loadClients() {
-            console.log("Chargement des clients depuis Supabase...");
-            const { data, error } = await supabaseClient
+            // Pas besoin de vérifier l'utilisateur ici, checkUserSession l'a déjà fait.
+            
+            const { data, error } = await supabase
                 .from(TABLE_NAME)
                 .select('*')
-                .order('id', { ascending: false }); // Tri par le plus récent
+                .order('created_at', { ascending: false });
 
             if (error) {
-                console.error("Erreur lors du chargement des clients:", error);
-                clients = [];
-            } else {
-                // Utilise les données de Supabase et assure la rétrocompatibilité des propriétés
-                clients = data.map(client => ({
-                    ...client,
-                    facturee: typeof client.facturee === 'undefined' ? false : client.facturee,
-                    commentaires: client.commentaires || '',
-                }));
+                console.error('Erreur lors du chargement des clients:', error);
+                return;
             }
+
+            clients = data || [];
+            // Assurez-vous que chaque client a les propriétés facturee et commentaires (pour la rétrocompatibilité)
+            clients.forEach(client => {
+                if (typeof client.facturee === 'undefined') {
+                    client.facturee = false;
+                }
+                if (typeof client.commentaires === 'undefined') {
+                    client.commentaires = '';
+                }
+            });
             renderDashboard();
         }
 
@@ -1224,8 +1208,11 @@ Adresse : ${p.adresse || 'Non renseignée'}
         /**
          * Fonction d'initialisation appelée au chargement de la page.
          */
+/**
+         * Fonction d'initialisation appelée au chargement de la page.
+         */
         function initializeApp() {
-            // Écouteurs d'événements
+            // Écouteurs d'événements (Le code reste le même)
             document.getElementById('typeBox').addEventListener('change', updateStationDropdown);
             document.getElementById('nbParticipants').addEventListener('change', (e) => {
                 renderParticipantFields(e.target.value);
@@ -1233,6 +1220,7 @@ Adresse : ${p.adresse || 'Non renseignée'}
             document.getElementById('searchInput').addEventListener('input', renderDashboard);
             document.getElementById('boxTypeFilter').addEventListener('change', renderDashboard);
             document.getElementById('stationFilter').addEventListener('change', renderDashboard);
+            document.getElementById('statusFilter').addEventListener('change', renderDashboard); // Assurez-vous d'avoir ce filtre
 
             // Écouteur d'événement pour le formulaire
             form.addEventListener('submit', handleFormSubmit);
@@ -1242,7 +1230,7 @@ Adresse : ${p.adresse || 'Non renseignée'}
             populateStationFilter();
             
             // POINT CLÉ : Vérifie si l'utilisateur est connecté au chargement
-            checkUserSession();
+            checkUserSession(); 
         }
 
         // Appelle la fonction d'initialisation au chargement de la page
@@ -1252,6 +1240,7 @@ Adresse : ${p.adresse || 'Non renseignée'}
     </script>
 </body>
 </html>
+
 
 
 
