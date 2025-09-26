@@ -242,20 +242,35 @@
         
         <div id="dashboard" class="section active">
             <h2>Dossiers clients</h2>
-            <div class="dashboard-controls">
-                <input type="text" id="searchInput" placeholder="Rechercher par nom, mail, box ID...">
-                <select id="boxTypeFilter">
-                    <option value="">Filtrer par type de box</option>
-                    <option value="BOX Premiers émois thermaux">BOX Premiers émois thermaux</option>
-                    <option value="Box Divine évasion au spa">Box Divine évasion au spa</option>
-                    <option value="BOX Eveil des sens">BOX Eveil des sens</option>
-                    <option value="Box Le séjour des Accros du Peignoir">Box Le séjour des Accros du Peignoir</option>
-                    <option value="Box Le séjour des Accros du Peignoir PREMIUM">Box Le séjour des Accros du Peignoir PREMIUM</option>
-                </select>
-                <select id="stationFilter">
-                    <option value="">Filtrer par station</option>
-                    </select>
-            </div>
+<div class="dashboard-controls">
+    <input type="text" id="searchInput" placeholder="Rechercher par nom, mail, box ID...">
+    
+    <select id="boxTypeFilter">
+        <option value="">Filtrer par type de box</option>
+        <option value="BOX Premiers émois thermaux">BOX Premiers émois thermaux</option>
+        <option value="Box Divine évasion au spa">Box Divine évasion au spa</option>
+        <option value="BOX Eveil des sens">BOX Eveil des sens</option>
+        <option value="Box Le séjour des Accros du Peignoir">Box Le séjour des Accros du Peignoir</option>
+        <option value="Box Le séjour des Accros du Peignoir PREMIUM">Box Le séjour des Accros du Peignoir PREMIUM</option>
+    </select>
+    
+    <select id="stationFilter">
+        <option value="">Filtrer par station</option>
+        </select>
+        
+    <select id="statusFilter">
+        <option value="">Filtrer par Statut...</option>
+        <option value="Non traité">Non traité</option>
+        <option value="Mail envoyé">Mail envoyé</option>
+        <option value="Validé">Validé</option>
+    </select>
+
+    <select id="factureFilter">
+        <option value="">Filtrer par Facturation...</option>
+        <option value="oui">Facturé</option>
+        <option value="non">Non facturé</option>
+    </select>
+    </div>
             <p id="noClientsMessage">Aucun client enregistré.</p>
             <div style="overflow-x:auto;">
                 <table id="clientsTable">
@@ -795,69 +810,82 @@ function editClient(id) {
 
         // --- Fonctions d'affichage et de rendu (Pas de changement Supabase ici) ---
 
-        /**
-         * Met à jour le tableau de bord avec les clients actuels en appliquant les filtres.
-         */
-        function renderDashboard() {
-            const tableBody = document.querySelector('#clientsTable tbody');
-            const noClientsMessage = document.getElementById('noClientsMessage');
-            const table = document.getElementById('clientsTable');
-            tableBody.innerHTML = ''; // Vide le tableau
+/**
+ * Met à jour le tableau de bord avec les clients actuels en appliquant les filtres.
+ */
+function renderDashboard() {
+    const tableBody = document.querySelector('#clientsTable tbody');
+    const noClientsMessage = document.getElementById('noClientsMessage');
+    const table = document.getElementById('clientsTable');
+    tableBody.innerHTML = ''; // Vide le tableau
 
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const boxTypeFilter = document.getElementById('boxTypeFilter').value;
-            const stationFilter = document.getElementById('stationFilter').value;
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const boxTypeFilter = document.getElementById('boxTypeFilter').value;
+    const stationFilter = document.getElementById('stationFilter').value;
+    // NOUVEAU : Récupération des valeurs des filtres de statut et facture
+    const statusFilter = document.getElementById('statusFilter').value;
+    const factureFilter = document.getElementById('factureFilter').value;
 
-            // Filtre les clients
-            const filteredClients = clients.filter(client => {
-                const matchesSearch = searchTerm === '' || 
-                                    client.boxId.toLowerCase().includes(searchTerm) ||
-                                    client.participants.some(p => 
-                                        p.nom.toLowerCase().includes(searchTerm) ||
-                                        p.prenom.toLowerCase().includes(searchTerm) ||
-                                        (p.email && p.email.toLowerCase().includes(searchTerm)) ||
-                                        (p.telephone && p.telephone.toLowerCase().includes(searchTerm))
-                                    );
-                const matchesBoxType = boxTypeFilter === '' || client.typeBox === boxTypeFilter;
-                const matchesStation = stationFilter === '' || client.station === stationFilter;
-                
-                return matchesSearch && matchesBoxType && matchesStation;
-            });
 
-            if (filteredClients.length === 0) {
-                noClientsMessage.style.display = 'block';
-                table.style.display = 'none';
-            } else {
-                noClientsMessage.style.display = 'none';
-                table.style.display = 'table';
-                filteredClients.forEach(client => {
-                    const mainParticipant = client.participants[0];
-                    const row = tableBody.insertRow();
-                    row.innerHTML = `
-                        <td>${mainParticipant.prenom} ${mainParticipant.nom}</td>
-                        <td>${client.boxId}</td>
-                        <td>${client.typeBox}</td>
-                        <td>${client.station}</td>
-                        <td>
-                            <select class="status-select status-${client.statut.replace(/\s/g, '-')}" onchange="updateClientStatus('${client.id}', this.value, this)">
-                                ${statuses.map(s => `<option value="${s}" ${s === client.statut ? 'selected' : ''}>${s}</option>`).join('')}
-                            </select>
-                        </td>
-                        <td>
-                           <button class="facture-button ${client.facturee ? 'facture-oui' : 'facture-non'}" onclick="updateFactureStatus('${client.id}')">
-                              ${client.facturee ? 'Facturé' : 'Non facturé'}
-                           </button>
-                        </td>
-                        <td>
-                            <button class="edit-btn" onclick="editClient('${client.id}')">Voir / Modifier</button>
-                            <button class="comment-btn" onclick="showComment('${client.id}')">Commentaires</button>
-                            <button class="delete-btn" onclick="deleteClient('${client.id}')">Supprimer</button>
-                            <button class="mail-btn" onclick="generateMail('${client.id}')">Générer mail</button>
-                        </td>
-                    `;
-                });
-            }
-        }
+    // Filtre les clients
+    const filteredClients = clients.filter(client => {
+        const matchesSearch = searchTerm === '' || 
+                            client.boxId.toLowerCase().includes(searchTerm) ||
+                            client.participants.some(p => 
+                                p.nom.toLowerCase().includes(searchTerm) ||
+                                p.prenom.toLowerCase().includes(searchTerm) ||
+                                (p.email && p.email.toLowerCase().includes(searchTerm)) ||
+                                (p.telephone && p.telephone.toLowerCase().includes(searchTerm))
+                            );
+        const matchesBoxType = boxTypeFilter === '' || client.typeBox === boxTypeFilter;
+        const matchesStation = stationFilter === '' || client.station === stationFilter;
+        
+        // NOUVEAU : Logique de filtrage par statut
+        const matchesStatus = statusFilter === '' || client.statut === statusFilter;
+
+        // NOUVEAU : Logique de filtrage par facture (client.facturee est un booléen)
+        const matchesFacture = factureFilter === '' || 
+                               (factureFilter === 'oui' && client.facturee === true) ||
+                               (factureFilter === 'non' && client.facturee === false);
+
+        // Combinaison de tous les filtres
+        return matchesSearch && matchesBoxType && matchesStation && matchesStatus && matchesFacture;
+    });
+
+    if (filteredClients.length === 0) {
+        noClientsMessage.style.display = 'block';
+        table.style.display = 'none';
+    } else {
+        noClientsMessage.style.display = 'none';
+        table.style.display = 'table';
+        filteredClients.forEach(client => {
+            const mainParticipant = client.participants[0];
+            const row = tableBody.insertRow();
+            row.innerHTML = `
+                <td>${mainParticipant.prenom} ${mainParticipant.nom}</td>
+                <td>${client.boxId}</td>
+                <td>${client.typeBox}</td>
+                <td>${client.station}</td>
+                <td>
+                    <select class="status-select status-${client.statut.replace(/\s/g, '-')}" onchange="updateClientStatus('${client.id}', this.value, this)">
+                        ${statuses.map(s => `<option value="${s}" ${s === client.statut ? 'selected' : ''}>${s}</option>`).join('')}
+                    </select>
+                </td>
+                <td>
+                   <button class="facture-button ${client.facturee ? 'facture-oui' : 'facture-non'}" onclick="updateFactureStatus('${client.id}')">
+                      ${client.facturee ? 'Facturé' : 'Non facturé'}
+                   </button>
+                </td>
+                <td>
+                    <button class="edit-btn" onclick="editClient('${client.id}')">Voir / Modifier</button>
+                    <button class="comment-btn" onclick="showComment('${client.id}')">Commentaires</button>
+                    <button class="delete-btn" onclick="deleteClient('${client.id}')">Supprimer</button>
+                    <button class="mail-btn" onclick="generateMail('${client.id}')">Générer mail</button>
+                </td>
+            `;
+        });
+    }
+}
         
         /**
          * Génère et affiche le contenu d'un mail pour un client.
@@ -1086,7 +1114,10 @@ Adresse : ${p.adresse || 'Non renseignée'}
             document.getElementById('searchInput').addEventListener('input', renderDashboard);
             document.getElementById('boxTypeFilter').addEventListener('change', renderDashboard);
             document.getElementById('stationFilter').addEventListener('change', renderDashboard);
-
+ // NOUVEAU
+            document.getElementById('statusFilter').addEventListener('change', renderDashboard);
+            document.getElementById('factureFilter').addEventListener('change', renderDashboard);
+            
             // Écouteur d'événement pour le formulaire
             form.addEventListener('submit', handleFormSubmit);
 
@@ -1104,6 +1135,7 @@ Adresse : ${p.adresse || 'Non renseignée'}
     </script>
 </body>
 </html>
+
 
 
 
