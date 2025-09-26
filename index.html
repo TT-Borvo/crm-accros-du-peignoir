@@ -384,7 +384,9 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlYXFzcmxoZHhwdnBvendlbG1xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MjI1MTMsImV4cCI6MjA3NDE5ODUxM30.HouILqtaoOkrBGPk8lhJzrePAmGWkftyxM--CVlBvsE'; 
         const TABLE_NAME = 'clients_dossiers'; // Nom de la table dans votre base Supabase
         
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // FIX DE L'ERREUR : La variable locale est renommée 'supabaseClient' 
+        // pour ne pas entrer en conflit avec l'objet global 'supabase' du CDN.
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         // =========================================================================================
 
 
@@ -460,7 +462,7 @@ Cordialement,
                     'Cransac-les-Thermes': '4 soins thermaux à choisir parmi : douche locales de gaz sec (rachis, épaules, genoux, coudes ou hanches), étuve mains/pieds, vaporarium, étuve générale, berthollaix.',
                     'La Bourboule': 'Partez à la découverte des bienfaits de l’eau thermale des Grands Thermes de La Bourboule, le temps d’un matin. Régénérez votre peau et tonifiez vos voies respiratoires.',
                     'Le Mont-Dore': 'Découvrez le bien-être thermal avec cette box composé de 3 soins thermaux, dont des jets de forte pression en piscine thermale, un bain reminéralisant hydromassant, ainsi qu’un accès à la tisanerie et bain de vapeur.',
-                    'Néris-les-Bains': 'Un velouté de bain (20 minutes) comprenant un bain hydromassant aux huiles essentielles qui apporte un effet sédatif équilibrant, tonique et décontractant + une douche à jet (10 minutes) Tonifiante et stimulante, elle permet de décontracter les muscles grâce à un protocole de massage complet effectué par la spa praticienne à l’aide du jet sous pression.',
+                    'Néris-les-Bains': 'Un velouté de bain (20 minutes) comprenant un bain hydromassant aux huiles essentielles qui apporte un effet sédatif équilibrant, tonique et décontractant + une douche à jet (10 minutes) Tonifiante et stimulante, elle permet de décontracter les muscles grâce à un protocole de massage complet effectué par le spa praticien à l’aide du jet sous pression.',
                     'Royat-Chamalières': 'Votre découverte thermale au pied des Volcans pour vous ressourcer et retrouver énergie et sérénité. Votre programme de soins : Bain de gaz (doux et reposant, favorisant la circulation sanguine), Application de boue (mélange d’argile et d’eau thermale, décontracturant), Douche (relaxante et tonifiante), Bain bouillonnant (décontractant, relaxant et stimulant circulatoire).',
                     'Saint-Honoré-les-Bains': 'Votre spa liberté au sein de magnifiques thermes 1900, aux secteurs de soins vastes et clairs, ouvrant sur un parc séculaire. Dans un décor chic et feutré, vous pourrez vous y faire chouchouter en bénéficiant d’installations tout confort avec au programme : un bain reminéralisant hydromassant (10 minutes), jets de fortes pression (15 minutes), un accès au vaporarium et à la tisanerie.',
                 }
@@ -476,7 +478,7 @@ Cordialement,
                     'Le Mont-Dore': 'Immergez-vous dans bien-être thermal avec cette box composé d’un bain reminéralisant hydromassant, de jets de forte pression en piscine thermale, d’une ondée thermale hydromassante et d’un lit hydromassant.',
                     'Montrond-les-Bains': 'Un Spa Sérénité composé de 3 soins & un accès au bassin des Iléades comprenant un massage Détente Aromatique Fleur d’Oranger et Bois de Cèdre 30mn, un bain Hydromassant Relaxant aux Huiles Essentielles 15mn, un lit Tiède Hydromassant 15mn, et un accès aux Bassins et à l’Espace Détente des Iléades 2h30.',
                     'Néris-les-Bains': 'Un forfait de trois soins composé d’un massage sous affusion (20mn), d’un gommage sous affusion, et d’un instant particulier (15mn).',
-                    'Royat-Chamalières': 'Votre forfait de soins aux thermes de Royat comprenant un bain bouillonnant, une application de boue, un bain de gaz et un accès 2h30 aux bassins intérieurs et exterieurs de Royatonic + 1 lit hydromassant 20mn.',
+                    'Royat-Chamalières': 'Votre forfait de soins aux thermes de Royat comprenant un bain de gaz, une application de boue, un bain bouillonnant et un accès 2h30 aux bassins intérieurs et exterieurs de Royatonic + 1 lit hydromassant 20mn.',
                     'Saint-Honoré-les-Bains': 'Votre spa sérénité qui comprend un massage détente aromatique de 30 min, un lit hydromassant de 10 min, un bain reminéralisant hydromassant de 10 min, une ondée thermale de 10 min, un accès au vaporarium et à la tisanerie.',
                     'Vals-les-Bains': 'Massage relaxant Californien de 30 minutes et une sérénité retrouvée grâce à une alliance de gestuelles douces et enveloppantes + une entrée 2h au parcours sensoriel « Les Bassins du Séquoia ».',
                 }
@@ -577,7 +579,8 @@ Cordialement,
          */
         async function loadClients() {
             console.log("Chargement des clients depuis Supabase...");
-            const { data, error } = await supabase
+            // UTILISATION DE supabaseClient
+            const { data, error } = await supabaseClient
                 .from(TABLE_NAME)
                 .select('*')
                 .order('id', { ascending: false }); // Tri par le plus récent
@@ -603,7 +606,8 @@ Cordialement,
         async function saveClient(clientData) {
             if (clientData.id) {
                 // MODIFICATION (UPDATE)
-                const { error } = await supabase
+                // UTILISATION DE supabaseClient
+                const { error } = await supabaseClient
                     .from(TABLE_NAME)
                     .update(clientData)
                     .eq('id', clientData.id); // Utilise l'ID Supabase pour la mise à jour
@@ -616,7 +620,8 @@ Cordialement,
                 // CRÉATION (INSERT)
                 // Retire l'ID temporaire pour laisser Supabase générer le sien
                 delete clientData.id; 
-                const { data, error } = await supabase
+                // UTILISATION DE supabaseClient
+                const { data, error } = await supabaseClient
                     .from(TABLE_NAME)
                     .insert([clientData])
                     .select(); // Récupère le client inséré avec son ID Supabase
@@ -703,7 +708,8 @@ Cordialement,
          */
         async function deleteClient(id) {
             if (confirm("Êtes-vous sûr de vouloir supprimer ce dossier client ?")) {
-                const { error } = await supabase
+                // UTILISATION DE supabaseClient
+                const { error } = await supabaseClient
                     .from(TABLE_NAME)
                     .delete()
                     .eq('id', id);
@@ -728,7 +734,8 @@ Cordialement,
             if (client) {
                 const newFactureeStatus = !client.facturee;
 
-                const { error } = await supabase
+                // UTILISATION DE supabaseClient
+                const { error } = await supabaseClient
                     .from(TABLE_NAME)
                     .update({ facturee: newFactureeStatus })
                     .eq('id', id);
@@ -753,7 +760,8 @@ Cordialement,
         async function updateClientStatus(id, newStatus, element) {
             const client = clients.find(c => c.id === id);
             if (client) {
-                const { error } = await supabase
+                // UTILISATION DE supabaseClient
+                const { error } = await supabaseClient
                     .from(TABLE_NAME)
                     .update({ statut: newStatus })
                     .eq('id', id);
