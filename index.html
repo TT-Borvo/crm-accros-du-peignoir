@@ -427,7 +427,7 @@
         const TABLE_NAME = 'clients'; 
         
         // La déclaration de 'supabase' doit se faire AVANT toute utilisation de ce nom
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); 
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY); 
 
         
         // =========================================================================================
@@ -1240,6 +1240,7 @@ Adresse : ${p.adresse || 'Non renseignée'}
     </script>
 </body>
 </html>
+
 
 
 
