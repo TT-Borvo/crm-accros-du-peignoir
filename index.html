@@ -373,8 +373,7 @@
         </div>
 
     </div>
-
-    <script>
+<script>
         // Début du JavaScript
 
         // =========================================================================================
@@ -382,7 +381,7 @@
         // !!! REMPLACEZ CES VALEURS PAR VOTRE URL ET VOTRE CLÉ PUBLIQUE !!!
         const SUPABASE_URL = 'https://reaqsrlhdxpvpozwelmq.supabase.co'; 
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlYXFzcmxoZHhwdnBvendlbG1xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MjI1MTMsImV4cCI6MjA3NDE5ODUxM30.HouILqtaoOkrBGPk8lhJzrePAmGWkftyxM--CVlBvsE'; 
-        const TABLE_NAME = 'clients'; // Nom de la table dans votre base Supabase
+        const TABLE_NAME = 'clients'; // Utilisation du nom de table corrigé
         
         // FIX DE L'ERREUR : La variable locale est renommée 'supabaseClient' 
         // pour ne pas entrer en conflit avec l'objet global 'supabase' du CDN.
@@ -391,7 +390,6 @@
 
 
         // Constantes et variables
-        const CLIENTS_STORAGE_KEY = 'clients'; // Cette variable n'est plus utilisée pour le stockage réel
         const participantsContainer = document.getElementById('participantsContainer');
         const form = document.getElementById('clientForm');
         let clients = [];
@@ -519,7 +517,7 @@ Cordialement,
                 composition: {
                     'La Bourboule': 'Une nuit en chambre supérieure avec petit déjeuner à La Tour Pom’Pin 2 personnes. Un massage sur mesure de 60 minutes par personne (pas de duo). Un soin du visage personnalisé 75 min par personne (pas de duo). Un diner pour 2 personnes. Un forfait Premium aux Grands Thermes : sauna, douche pulvérisée, douche au jet, douche pénétrante, brouillard, bain bouillonnant parfumé, accès Premium.',
                     'Bourbon-Lancy': 'Diner (Formule supérieure avec Menu Terroir : entrée/ plat / dessert) + Une nuit avec petit déjeuner au Grand Hôtel + Un modelage de 60 minutes au choix parmi le modelage Sea Holistic by Phytomer d’inspiration Thaï pour éliminer les tensions OU le modelage Trésor Wellness by Phytomer pour rééquilibrer les énergies. + Un soin visage au choix parmi le soin visage détox Citadine by Phytomer OU le soin visage Peau neuve au masculin by Phytomer + 1 application de boue marine autochauffante dans le dos. + 1 Boisson au choix.',
-                    'Châtel-Guyon': 'Hébergement au sein d’Aïga résidence**** : 1 nuit en studio Côme directement relié à votre espace de soins avec petit-déjeuner buffet inclus au restaurant nutri-gastronomique d’Aïga resort. Soins au sein d’Aïga spa thermal comprenant un bain hydromassant ou apaisant, un gommage du corps bio aux éclats de noix, un massage relaxant à l’huile bio de carottes sauvages, un soin d’hydrothérapie : 1 Douche générale et locale au jet, ou douche de boue, ou bain de boue, Douche escargot (selon dispo du spa) + Accès libre aux équipements de bien-être du spa la demi-journée de vos soins : bassin de détente en eau thermale (cols de cygne, couloir de nage à contre-courant, transats à bulles immergés…), bain à remous extérieur, solarium, hammams, salle de repos en lumière de wood, tisanerie et douches expérientielles.',
+                    'Châtel-Guyon': 'Hébergement au sein d’Aïga résidence**** : 1 nuit en studio Côme directement relié à votre espace de soins avec petit-déjeuner buffet inclus au restaurant nutri-gastronomique d’Aïga resort. Soins au sein d’Aïga spa thermal comprenant un bain hydromassant ou apaisant, un gommage du corps bio aux éclats de noix, un massage relaxant à l’huile bio de carottes sauvages, un soin d’hydrothérapie : 1 Douche générale et locale au jet, ou douche de boue, ou bain de boue, Douche escargot (selon dispo du spa) + Accès libre aux équipements de bien-être du spa la demi-journée de vos soins : bassin de détente en eau thermale (cols de cygne, couloir de nage à contre-courant, transats à bulles immergées…), bain à remous extérieur, solarium, hammams, salle de repos en lumière de wood, tisanerie et douches expérientielles.',
                     'Vals-les-Bains': 'Au cœur de l’Ardèche méridionale et de la station thermale de Vals-les-Bains, un séjour où l’élégance de la nature vous apportera sérénité, détente et lâcher-prise. Les parcs à proximité invitent à la flânerie, la vaste terrasse arborée et joliment aménagée de l’hôtel vous enveloppe de sa fraîcheur pour vos moments de détente. Vous apprécierez la piscine extérieure chauffée, promesse de relaxation divine… Vous séjournerez 1 nuit dans une suite junior pour 2 personnes avec petit-déjeuner buffet à l’hôtel Helvie**** et une bouteille de champagne en chambre. De la jolie façade aux garde-corps en fer forgé émane déjà le charme des maisons qui ont une âme et une belle histoire à vous raconter. Profitez aussi d’un repas pour deux personnes au Circus Bistro qui régalera vos papilles. Au Spa Séquoia Redwood, vous profiterez d’un Massage en duo de 45 minutes + une entrée 2h au parcours sensoriel « Les Bassins du Séquoia » pour un authentique moment de détente dans un espace d’exception à l’eau thermale de Vals. Bains chauds, bassin extérieur, sauna, hammam, tisanerie, contre-courant, buses de massages et diverses étapes. Ce parcours en 14 étapes est une succession de soins d’hydrothérapie qui s’appuie sur l’alternance du chaud/froid, et qui effectue le même parcours que l’eau Valsoise.',
                 }
             },
@@ -579,7 +577,6 @@ Cordialement,
          */
         async function loadClients() {
             console.log("Chargement des clients depuis Supabase...");
-            // UTILISATION DE supabaseClient
             const { data, error } = await supabaseClient
                 .from(TABLE_NAME)
                 .select('*')
@@ -606,7 +603,6 @@ Cordialement,
         async function saveClient(clientData) {
             if (clientData.id) {
                 // MODIFICATION (UPDATE)
-                // UTILISATION DE supabaseClient
                 const { error } = await supabaseClient
                     .from(TABLE_NAME)
                     .update(clientData)
@@ -618,9 +614,7 @@ Cordialement,
                 }
             } else {
                 // CRÉATION (INSERT)
-                // Retire l'ID temporaire pour laisser Supabase générer le sien
                 delete clientData.id; 
-                // UTILISATION DE supabaseClient
                 const { data, error } = await supabaseClient
                     .from(TABLE_NAME)
                     .insert([clientData])
@@ -635,7 +629,6 @@ Cordialement,
                 }
             }
             
-            // Après toute opération, on recharge les données.
             await loadClients(); 
             resetForm();
             showSection('dashboard');
@@ -684,10 +677,11 @@ Cordialement,
          * @param {number} id - L'ID du client à modifier.
          */
         function editClient(id) {
-            const client = clients.find(c => c.id === id);
+            const clientId = Number(id); // <--- CORRECTION ID : Convertit l'ID string en nombre
+            const client = clients.find(c => c.id === clientId);
             if (!client) return;
             
-            editingId = id;
+            editingId = clientId;
             document.getElementById('formTitle').textContent = `Modifier le dossier de ${client.participants[0].prenom} ${client.participants[0].nom}`;
 
             document.getElementById('boxId').value = client.boxId;
@@ -707,19 +701,19 @@ Cordialement,
          * @param {number} id - L'ID (Supabase) du client à supprimer.
          */
         async function deleteClient(id) {
+            const clientId = Number(id); // <--- CORRECTION ID : Convertit l'ID string en nombre
             if (confirm("Êtes-vous sûr de vouloir supprimer ce dossier client ?")) {
-                // UTILISATION DE supabaseClient
                 const { error } = await supabaseClient
                     .from(TABLE_NAME)
                     .delete()
-                    .eq('id', id);
+                    .eq('id', clientId);
 
                 if (error) {
                     console.error("Erreur lors de la suppression:", error);
                     alert("Erreur lors de la suppression du dossier.");
                 } else {
                     // Met à jour la liste locale
-                    clients = clients.filter(c => c.id !== id);
+                    clients = clients.filter(c => c.id !== clientId);
                     renderDashboard();
                 }
             }
@@ -730,15 +724,15 @@ Cordialement,
          * @param {number} id - L'ID (Supabase) du client.
          */
         async function updateFactureStatus(id) {
-            const client = clients.find(c => c.id === id);
+            const clientId = Number(id); // <--- CORRECTION ID : Convertit l'ID string en nombre
+            const client = clients.find(c => c.id === clientId);
             if (client) {
                 const newFactureeStatus = !client.facturee;
 
-                // UTILISATION DE supabaseClient
                 const { error } = await supabaseClient
                     .from(TABLE_NAME)
                     .update({ facturee: newFactureeStatus })
-                    .eq('id', id);
+                    .eq('id', clientId);
                     
                 if (error) {
                     console.error("Erreur mise à jour facturation:", error);
@@ -758,13 +752,13 @@ Cordialement,
          * @param {HTMLElement} element - L'élément select qui a déclenché l'événement.
          */
         async function updateClientStatus(id, newStatus, element) {
-            const client = clients.find(c => c.id === id);
+            const clientId = Number(id); // <--- CORRECTION ID : Convertit l'ID string en nombre
+            const client = clients.find(c => c.id === clientId);
             if (client) {
-                // UTILISATION DE supabaseClient
                 const { error } = await supabaseClient
                     .from(TABLE_NAME)
                     .update({ statut: newStatus })
-                    .eq('id', id);
+                    .eq('id', clientId);
 
                 if (error) {
                     console.error("Erreur mise à jour statut:", error);
@@ -783,7 +777,8 @@ Cordialement,
          * @param {number} id - L'ID du client.
          */
         function showComment(id) {
-            const client = clients.find(c => c.id === id);
+            const clientId = Number(id); // <--- CORRECTION ID : Convertit l'ID string en nombre
+            const client = clients.find(c => c.id === clientId);
             if (client && client.commentaires) {
                 alert(`Commentaires pour le dossier ${client.boxId}:\n\n${client.commentaires}`);
             } else {
@@ -838,88 +833,23 @@ Cordialement,
                         <td>${client.typeBox}</td>
                         <td>${client.station}</td>
                         <td>
-                            <select class="status-select status-${client.statut.replace(/\s/g, '-')}" onchange="updateClientStatus(${client.id}, this.value, this)">
+                            <select class="status-select status-${client.statut.replace(/\s/g, '-')}" onchange="updateClientStatus('${client.id}', this.value, this)">
                                 ${statuses.map(s => `<option value="${s}" ${s === client.statut ? 'selected' : ''}>${s}</option>`).join('')}
                             </select>
                         </td>
                         <td>
-                           <button class="facture-button ${client.facturee ? 'facture-oui' : 'facture-non'}" onclick="updateFactureStatus(${client.id})">
+                           <button class="facture-button ${client.facturee ? 'facture-oui' : 'facture-non'}" onclick="updateFactureStatus('${client.id}')">
                               ${client.facturee ? 'Facturé' : 'Non facturé'}
                            </button>
                         </td>
                         <td>
-                            <button class="edit-btn" onclick="editClient(${client.id})">Voir / Modifier</button>
-                            <button class="comment-btn" onclick="showComment(${client.id})">Commentaires</button>
-                            <button class="delete-btn" onclick="deleteClient(${client.id})">Supprimer</button>
-                            <button class="mail-btn" onclick="generateMail(${client.id})">Générer mail</button>
+                            <button class="edit-btn" onclick="editClient('${client.id}')">Voir / Modifier</button>
+                            <button class="comment-btn" onclick="showComment('${client.id}')">Commentaires</button>
+                            <button class="delete-btn" onclick="deleteClient('${client.id}')">Supprimer</button>
+                            <button class="mail-btn" onclick="generateMail('${client.id}')">Générer mail</button>
                         </td>
                     `;
                 });
-            }
-        }
-        
-        /**
-         * NOTE: saveClients() n'est plus nécessaire.
-         */
-        function saveClients() {
-            // Laissez vide ou retirez - la sauvegarde est gérée par saveClient(clientData) vers Supabase
-        }
-
-
-        /**
-         * Met à jour la liste déroulante des stations en fonction de la box sélectionnée.
-         */
-        function updateStationDropdown() {
-            const selectedBox = document.getElementById('typeBox').value;
-            const stationSelect = document.getElementById('station');
-            stationSelect.innerHTML = '<option value="">Sélectionner...</option>'; // Réinitialise
-            
-            if (selectedBox && boxStations[selectedBox]) {
-                boxStations[selectedBox].forEach(station => {
-                    const option = document.createElement('option');
-                    option.value = station;
-                    option.textContent = station;
-                    stationSelect.appendChild(option);
-                });
-            }
-        }
-
-        /**
-         * Génère dynamiquement les champs du formulaire pour le nombre de participants.
-         * @param {number} count - Le nombre de participants.
-         * @param {Array} data - Les données des participants pour l'édition (optionnel).
-         */
-        function renderParticipantFields(count, data = []) {
-            participantsContainer.innerHTML = ''; // Vide le conteneur
-            
-            for (let i = 0; i < count; i++) {
-                const participant = data[i] || {};
-                const participantHtml = `
-                    <div class="participant-container">
-                        <h3>Participant ${i + 1}</h3>
-                        <div class="form-group">
-                            <label for="nom-${i}">Nom :</label>
-                            <input type="text" id="nom-${i}" value="${participant.nom || ''}" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="prenom-${i}">Prénom :</label>
-                            <input type="text" id="prenom-${i}" value="${participant.prenom || ''}" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="email-${i}">Email :</label>
-                            <input type="email" id="email-${i}" value="${participant.email || ''}" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="telephone-${i}">Téléphone :</label>
-                            <input type="tel" id="telephone-${i}" value="${participant.telephone || ''}">
-                        </div>
-                        <div class="form-group">
-                            <label for="adresse-${i}">Adresse postale :</label>
-                            <input type="text" id="adresse-${i}" value="${participant.adresse || ''}">
-                        </div>
-                    </div>
-                `;
-                participantsContainer.innerHTML += participantHtml;
             }
         }
         
@@ -928,7 +858,8 @@ Cordialement,
          * @param {number} id - L'ID du client.
          */
         function generateMail(id) {
-            const client = clients.find(c => c.id === id);
+            const clientId = Number(id); // <--- CORRECTION ID : Convertit l'ID string en nombre
+            const client = clients.find(c => c.id === clientId);
             if (!client) return;
             
             const mainParticipant = client.participants[0];
@@ -1061,6 +992,63 @@ Adresse : ${p.adresse || 'Non renseignée'}
         }
         
         /**
+         * Met à jour la liste déroulante des stations en fonction de la box sélectionnée.
+         */
+        function updateStationDropdown() {
+            const selectedBox = document.getElementById('typeBox').value;
+            const stationSelect = document.getElementById('station');
+            stationSelect.innerHTML = '<option value="">Sélectionner...</option>'; // Réinitialise
+            
+            if (selectedBox && boxStations[selectedBox]) {
+                boxStations[selectedBox].forEach(station => {
+                    const option = document.createElement('option');
+                    option.value = station;
+                    option.textContent = station;
+                    stationSelect.appendChild(option);
+                });
+            }
+        }
+
+        /**
+         * Génère dynamiquement les champs du formulaire pour le nombre de participants.
+         * @param {number} count - Le nombre de participants.
+         * @param {Array} data - Les données des participants pour l'édition (optionnel).
+         */
+        function renderParticipantFields(count, data = []) {
+            participantsContainer.innerHTML = ''; // Vide le conteneur
+            
+            for (let i = 0; i < count; i++) {
+                const participant = data[i] || {};
+                const participantHtml = `
+                    <div class="participant-container">
+                        <h3>Participant ${i + 1}</h3>
+                        <div class="form-group">
+                            <label for="nom-${i}">Nom :</label>
+                            <input type="text" id="nom-${i}" value="${participant.nom || ''}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="prenom-${i}">Prénom :</label>
+                            <input type="text" id="prenom-${i}" value="${participant.prenom || ''}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email-${i}">Email :</label>
+                            <input type="email" id="email-${i}" value="${participant.email || ''}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="telephone-${i}">Téléphone :</label>
+                            <input type="tel" id="telephone-${i}" value="${participant.telephone || ''}">
+                        </div>
+                        <div class="form-group">
+                            <label for="adresse-${i}">Adresse postale :</label>
+                            <input type="text" id="adresse-${i}" value="${participant.adresse || ''}">
+                        </div>
+                    </div>
+                `;
+                participantsContainer.innerHTML += participantHtml;
+            }
+        }
+        
+        /**
          * Remplit le filtre des stations avec toutes les stations disponibles.
          */
         function populateStationFilter() {
@@ -1110,4 +1098,5 @@ Adresse : ${p.adresse || 'Non renseignée'}
     </script>
 </body>
 </html>
+
 
