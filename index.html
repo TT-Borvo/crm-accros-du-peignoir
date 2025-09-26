@@ -231,46 +231,65 @@
 </head>
 <body>
 
-    <div class="container">
+    <div id="authSection" class="container section active" style="max-width: 400px; padding: 30px; margin-top: 50px; display:none;">
+        <h2>Connexion au CRM</h2>
+        <div class="form-group">
+            <label for="authEmail">Email :</label>
+            <input type="email" id="authEmail" placeholder="Votre email" required>
+        </div>
+        <div class="form-group">
+            <label for="authPassword">Mot de passe :</label>
+            <input type="password" id="authPassword" placeholder="Mot de passe" required>
+        </div>
+        <div class="form-buttons">
+            <button onclick="handleLogin()">Se connecter</button>
+            <button onclick="handleSignup()" style="background-color: #6c757d;">S'inscrire (1ère fois)</button>
+        </div>
+        <p id="authMessage" style="color: red; margin-top: 15px;"></p>
+    </div>
+
+    <div id="appContent" class="container" style="display:none;">
+        
         <h1>CRM "Accros du Peignoir"</h1>
 
         <div class="nav-buttons">
             <button onclick="showSection('dashboard')">Tableau de bord</button>
             <button onclick="showSection('form')">Ajouter un dossier</button>
             <button class="activation-btn" onclick="showSection('mailActivation')">Mail d'activation de Box</button>
+            <button onclick="handleLogout()" style="background-color: #dc3545; margin-left: auto;">Déconnexion</button> 
         </div>
-        
+
         <div id="dashboard" class="section active">
             <h2>Dossiers clients</h2>
-<div class="dashboard-controls">
-    <input type="text" id="searchInput" placeholder="Rechercher par nom, mail, box ID...">
-    
-    <select id="boxTypeFilter">
-        <option value="">Filtrer par type de box</option>
-        <option value="BOX Premiers émois thermaux">BOX Premiers émois thermaux</option>
-        <option value="Box Divine évasion au spa">Box Divine évasion au spa</option>
-        <option value="BOX Eveil des sens">BOX Eveil des sens</option>
-        <option value="Box Le séjour des Accros du Peignoir">Box Le séjour des Accros du Peignoir</option>
-        <option value="Box Le séjour des Accros du Peignoir PREMIUM">Box Le séjour des Accros du Peignoir PREMIUM</option>
-    </select>
-    
-    <select id="stationFilter">
-        <option value="">Filtrer par station</option>
-        </select>
-        
-    <select id="statusFilter">
-        <option value="">Filtrer par Statut...</option>
-        <option value="Non traité">Non traité</option>
-        <option value="Mail envoyé">Mail envoyé</option>
-        <option value="Validé">Validé</option>
-    </select>
+            <div class="dashboard-controls">
+                <input type="text" id="searchInput" placeholder="Rechercher par nom, mail, box ID...">
+                
+                <select id="boxTypeFilter">
+                    <option value="">Filtrer par type de box</option>
+                    <option value="BOX Premiers émois thermaux">BOX Premiers émois thermaux</option>
+                    <option value="Box Divine évasion au spa">Box Divine évasion au spa</option>
+                    <option value="BOX Eveil des sens">BOX Eveil des sens</option>
+                    <option value="Box Le séjour des Accros du Peignoir">Box Le séjour des Accros du Peignoir</option>
+                    <option value="Box Le séjour des Accros du Peignoir PREMIUM">Box Le séjour des Accros du Peignoir PREMIUM</option>
+                </select>
+                
+                <select id="stationFilter">
+                    <option value="">Filtrer par station</option>
+                </select>
+                
+                <select id="statusFilter">
+                    <option value="">Filtrer par Statut...</option>
+                    <option value="Non traité">Non traité</option>
+                    <option value="Mail envoyé">Mail envoyé</option>
+                    <option value="Validé">Validé</option>
+                </select>
 
-    <select id="factureFilter">
-        <option value="">Filtrer par Facturation...</option>
-        <option value="oui">Facturé</option>
-        <option value="non">Non facturé</option>
-    </select>
-    </div>
+                <select id="factureFilter">
+                    <option value="">Filtrer par Facturation...</option>
+                    <option value="oui">Facturé</option>
+                    <option value="non">Non facturé</option>
+                </select>
+            </div>
             <p id="noClientsMessage">Aucun client enregistré.</p>
             <div style="overflow-x:auto;">
                 <table id="clientsTable">
@@ -286,7 +305,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        </tbody>
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -315,7 +334,7 @@
                     <label for="station">Station thermale :</label>
                     <select id="station" required>
                         <option value="">Sélectionner...</option>
-                        </select>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="dates">Dates souhaitées :</label>
@@ -332,7 +351,7 @@
                 </div>
 
                 <div id="participantsContainer">
-                    </div>
+                </div>
 
                 <div class="form-group">
                     <label for="commentaires">Commentaires :</label>
@@ -387,20 +406,113 @@
             </div>
         </div>
 
-    </div>
+    </div> 
 <script>
         // Début du JavaScript
 
         // =========================================================================================
-        // NOUVEAU : Configuration Supabase
+// =========================================================================================
+        // Configuration Supabase
         // !!! REMPLACEZ CES VALEURS PAR VOTRE URL ET VOTRE CLÉ PUBLIQUE !!!
         const SUPABASE_URL = 'https://reaqsrlhdxpvpozwelmq.supabase.co'; 
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlYXFzcmxoZHhwdnBvendlbG1xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MjI1MTMsImV4cCI6MjA3NDE5ODUxM30.HouILqtaoOkrBGPk8lhJzrePAmGWkftyxM--CVlBvsE'; 
-        const TABLE_NAME = 'clients'; // Utilisation du nom de table corrigé
+        const TABLE_NAME = 'clients'; 
         
-        // FIX DE L'ERREUR : La variable locale est renommée 'supabaseClient' 
-        // pour ne pas entrer en conflit avec l'objet global 'supabase' du CDN.
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Initialisation du client Supabase
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); 
+        // =========================================================================================
+        
+        // --- NOUVELLES Fonctions d'Authentification Supabase ---
+
+        /**
+         * Gère l'inscription d'un nouvel utilisateur (à utiliser une seule fois).
+         */
+        async function handleSignup() {
+            const email = document.getElementById('authEmail').value;
+            const password = document.getElementById('authPassword').value;
+            const authMessage = document.getElementById('authMessage');
+
+            authMessage.textContent = 'Inscription en cours...';
+
+            // Appel à l'API Supabase pour l'inscription
+            const { data, error } = await supabase.auth.signUp({
+                email: email,
+                password: password,
+            });
+
+            if (error) {
+                authMessage.textContent = `Erreur d'inscription : ${error.message}`;
+            } else if (data.user) {
+                authMessage.textContent = 'Inscription réussie ! Veuillez vérifier votre email pour confirmer l\'inscription, puis connectez-vous.';
+            }
+        }
+
+        /**
+         * Gère la connexion d'un utilisateur existant.
+         */
+        async function handleLogin() {
+            const email = document.getElementById('authEmail').value;
+            const password = document.getElementById('authPassword').value;
+            const authMessage = document.getElementById('authMessage');
+
+            authMessage.textContent = 'Connexion en cours...';
+
+            // Appel à l'API Supabase pour la connexion
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: email,
+                password: password,
+            });
+
+            if (error) {
+                authMessage.textContent = `Erreur de connexion : ${error.message}`;
+            } else if (data.user) {
+                // Succès : Vérifie l'état de la session pour afficher l'application
+                checkUserSession(); 
+            }
+        }
+
+        /**
+         * Gère la déconnexion.
+         */
+        async function handleLogout() {
+            const { error } = await supabase.auth.signOut();
+            if (!error) {
+                // Retour à la page de connexion
+                showAuthScreen();
+            }
+        }
+
+        /**
+         * Vérifie la session de l'utilisateur et bascule l'affichage (App/Connexion).
+         */
+        async function checkUserSession() {
+            // Récupère l'utilisateur actuellement connecté
+            const { data: { user } } = await supabase.auth.getUser();
+
+            if (user) {
+                // Utilisateur connecté : Afficher l'application
+                document.getElementById('authSection').style.display = 'none';
+                document.getElementById('appContent').style.display = 'block';
+                // Charge les données
+                loadClients();
+            } else {
+                // Utilisateur non connecté : Afficher la page de connexion
+                showAuthScreen();
+            }
+        }
+
+        /**
+         * Affiche la page de connexion et masque le contenu de l'application.
+         */
+        function showAuthScreen() {
+            document.getElementById('authSection').style.display = 'block';
+            document.getElementById('appContent').style.display = 'none';
+            document.getElementById('authMessage').textContent = '';
+            document.getElementById('authEmail').value = '';
+            document.getElementById('authPassword').value = '';
+        }
+        
+        // FIN des Fonctions d'Authentification
         // =========================================================================================
 
 
@@ -1100,7 +1212,7 @@ Adresse : ${p.adresse || 'Non renseignée'}
             });
         }
 
-        // --- Initialisation de l'application ---
+// --- Initialisation de l'application ---
 
         /**
          * Fonction d'initialisation appelée au chargement de la page.
@@ -1114,18 +1226,16 @@ Adresse : ${p.adresse || 'Non renseignée'}
             document.getElementById('searchInput').addEventListener('input', renderDashboard);
             document.getElementById('boxTypeFilter').addEventListener('change', renderDashboard);
             document.getElementById('stationFilter').addEventListener('change', renderDashboard);
- // NOUVEAU
-            document.getElementById('statusFilter').addEventListener('change', renderDashboard);
-            document.getElementById('factureFilter').addEventListener('change', renderDashboard);
-            
+
             // Écouteur d'événement pour le formulaire
             form.addEventListener('submit', handleFormSubmit);
 
             // Rendu initial
             renderParticipantFields(1);
             populateStationFilter();
-            // Utilise loadClients() pour charger les données depuis Supabase
-            loadClients(); 
+            
+            // POINT CLÉ : Vérifie si l'utilisateur est connecté au chargement
+            checkUserSession();
         }
 
         // Appelle la fonction d'initialisation au chargement de la page
@@ -1135,6 +1245,7 @@ Adresse : ${p.adresse || 'Non renseignée'}
     </script>
 </body>
 </html>
+
 
 
 
