@@ -427,8 +427,7 @@
         const TABLE_NAME = 'clients'; 
         
         // La déclaration de 'supabase' doit se faire AVANT toute utilisation de ce nom
-        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY); 
-
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
         // =========================================================================================
         // 3. Fonctions d'Authentification (NOUVEAU CODE)
@@ -441,7 +440,7 @@
 
             authMessage.textContent = 'Inscription en cours...';
 
-            const { data, error } = await supabase.auth.signUp({
+            const { data, error } = await supabaseClient.auth.signUp({
                 email: email,
                 password: password,
             });
@@ -460,7 +459,7 @@
 
             authMessage.textContent = 'Connexion en cours...';
 
-            const { data, error } = await supabase.auth.signInWithPassword({
+            const { data, error } = await supabaseClient.auth.signInWithPassword({
                 email: email,
                 password: password,
             });
@@ -473,14 +472,14 @@
         }
 
         async function handleLogout() {
-            const { error } = await supabase.auth.signOut();
+            const { error } = await supabaseClient.auth.signOut();
             if (!error) {
                 showAuthScreen();
             }
         }
 
         async function checkUserSession() {
-            const { data: { user } } = await supabase.auth.getUser();
+            const { data: { user } } = await supabaseClient.auth.getUser();
 
             if (user) {
                 // Utilisateur connecté : Afficher l'application
@@ -691,7 +690,7 @@ Cordialement,
         async function loadClients() {
             // Pas besoin de vérifier l'utilisateur ici, checkUserSession l'a déjà fait.
             
-            const { data, error } = await supabase
+            const { data, error } = await supabaseClient
                 .from(TABLE_NAME)
                 .select('*')
                 .order('created_at', { ascending: false });
@@ -1240,6 +1239,7 @@ Adresse : ${p.adresse || 'Non renseignée'}
     </script>
 </body>
 </html>
+
 
 
 
