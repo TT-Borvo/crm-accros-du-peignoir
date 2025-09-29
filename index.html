@@ -426,7 +426,7 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlYXFzcmxoZHhwdnBvendlbG1xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MjI1MTMsImV4cCI6MjA3NDE5ODUxM30.HouILqtaoOkrBGPk8lhJzrePAmGWkftyxM--CVlBvsE'; 
         const TABLE_NAME = 'clients'; 
         
-        // La déclaration de 'supabase' doit se faire AVANT toute utilisation de ce nom
+// NOUVEAU CODE (Corrige le conflit) :
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
         // =========================================================================================
@@ -729,20 +729,26 @@ Cordialement,
                     console.error("Erreur lors de la modification du client:", error);
                     alert("Erreur lors de la modification du dossier.");
                 }
-            } else {
+} else {
                 // CRÉATION (INSERT)
-                delete clientData.id; 
+                delete clientData.id;
+                
+                // 1. Récupérer l'ID de l'utilisateur connecté
+                const { data: { user } } = await supabaseClient.auth.getUser();
+
                 const { data, error } = await supabaseClient
                     .from(TABLE_NAME)
-                    .insert([clientData])
+                    .insert({ 
+                        ...clientData, 
+                        user_id: user.id // <--- AJOUT DE L'ID UTILISATEUR ICI
+                    })
                     .select(); // Récupère le client inséré avec son ID Supabase
 
                 if (error) {
                     console.error("Erreur lors de l'ajout du client:", error);
                     alert("Erreur lors de l'ajout du dossier.");
                 } else if (data && data.length > 0) {
-                    // Ajoute le nouveau client (avec son ID Supabase) à la liste locale
-                    clients.unshift(data[0]); 
+                    clients.unshift(data[0]); 
                 }
             }
             
@@ -1239,6 +1245,7 @@ Adresse : ${p.adresse || 'Non renseignée'}
     </script>
 </body>
 </html>
+
 
 
 
