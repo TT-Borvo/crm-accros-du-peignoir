@@ -434,7 +434,7 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         // 3. Fonctions d'Authentification (NOUVEAU CODE)
         // =========================================================================================
 
-        async leSignup() {
+        async function leSignup() {
             const email = document.getElementById('authEmail').value;
             const password = document.getElementById('authPassword').value;
             const authMessage = document.getElementById('authMessage');
@@ -1253,6 +1253,7 @@ Adresse : ${p.adresse || 'Non renseignée'}
     </script>
 </body>
 </html>
+
 
 
 
