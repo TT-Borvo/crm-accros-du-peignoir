@@ -284,10 +284,11 @@
                     <option value="Validé">Validé</option>
                 </select>
 
-                <select id="factureFilter">
-                    <option value="">Filtrer par Facturation...</option>
-                    <option value="oui">Facturé</option>
-                    <option value="non">Non facturé</option>
+                <select id="factureeFilter" onchange="loadClients()"> 
+    <option value="all">Tous les dossiers</option>
+    <option value="facturee">Facturé</option>
+    <option value="nonFacturee">Non facturé</option>
+</select>
                 </select>
             </div>
             <p id="noClientsMessage">Aucun client enregistré.</p>
@@ -433,7 +434,7 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         // 3. Fonctions d'Authentification (NOUVEAU CODE)
         // =========================================================================================
 
-        async function handleSignup() {
+        async leSignup() {
             const email = document.getElementById('authEmail').value;
             const password = document.getElementById('authPassword').value;
             const authMessage = document.getElementById('authMessage');
@@ -769,7 +770,7 @@ Cordialement,
          * Ajoute un nouveau client ou modifie un client existant via Supabase.
          * @param {Event} event - L'événement de soumission du formulaire.
          */
-        function handleFormSubmit(event) {
+        leFormSubmit(event) {
             event.preventDefault();
             
             const numParticipants = document.getElementById('nbParticipants').value;
@@ -1252,6 +1253,7 @@ Adresse : ${p.adresse || 'Non renseignée'}
     </script>
 </body>
 </html>
+
 
 
 
