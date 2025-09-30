@@ -767,41 +767,50 @@ Cordialement,
 
 
 /**
- * Ajoute un nouveau client ou modifie un client existant via Supabase.
+ * Gère la soumission du formulaire : collecte les données du client et les envoie à saveClient.
  * @param {Event} event - L'événement de soumission du formulaire.
  */
-async function leFormSubmit(event) { // <-- CORRECTION : AJOUT DE 'function' et 'async'
+async function leFormSubmit(event) {
+    // Empêche le rechargement de la page
     event.preventDefault();
-            
-            const numParticipants = document.getElementById('nbParticipants').value;
-            const participants = [];
-            for (let i = 0; i < numParticipants; i++) {
-                participants.push({
-                    nom: document.getElementById(`nom-${i}`).value,
-                    prenom: document.getElementById(`prenom-${i}`).value,
-                    email: document.getElementById(`email-${i}`).value,
-                    telephone: document.getElementById(`telephone-${i}`).value,
-                    adresse: document.getElementById(`adresse-${i}`).value,
-                });
-            }
+    
+    // Récupération des données du formulaire
+    const numParticipants = document.getElementById('nbParticipants').value;
+    const participants = [];
+    
+    // Boucle pour collecter les informations des participants
+    for (let i = 0; i < numParticipants; i++) {
+        participants.push({
+            nom: document.getElementById(`nom-${i}`).value,
+            prenom: document.getElementById(`prenom-${i}`).value,
+            email: document.getElementById(`email-${i}`).value,
+            telephone: document.getElementById(`telephone-${i}`).value,
+            adresse: document.getElementById(`adresse-${i}`).value,
+        });
+    }
 
-            const clientToSave = {
-                // Si editingId existe, on le passe pour une UPDATE
-                id: editingId, 
-                boxId: document.getElementById('boxId').value,
-                typeBox: form.typeBox.value,
-                station: form.station.value,
-                dates: form.dates.value,
-                // Récupère le statut et le statut de facturation du client actuel
-                statut: editingId ? clients.find(c => c.id === editingId).statut : 'Non traité',
-                facturee: editingId ? clients.find(c => c.id === editingId).facturee : false,
-                commentaires: document.getElementById('commentaires').value,
-                participants: participants, // Stocké comme JSONB
-            };
+    // Création de l'objet client à sauvegarder
+    // Note : La variable 'form' doit être accessible globalement ou définie dans ce scope.
+    const clientToSave = {
+        // L'ID est passé pour que saveClient sache s'il doit faire un INSERT ou un UPDATE
+        id: editingId, // La variable globale 'editingId' doit être définie
+        
+        boxId: document.getElementById('boxId').value,
+        typeBox: form.typeBox.value,
+        station: form.station.value,
+        dates: form.dates.value,
+        
+        // Récupère le statut existant en mode édition, sinon utilise la valeur par défaut
+        statut: editingId ? clients.find(c => c.id === editingId).statut : 'Non traité',
+        facturee: editingId ? clients.find(c => c.id === editingId).facturee : false,
+        
+        commentaires: document.getElementById('commentaires').value,
+        participants: participants, // Stocké comme JSONB
+    };
 
-            // Envoi des données à Supabase
-            saveClient(clientToSave);
-        }
+    // Envoi des données à Supabase et attente de la sauvegarde
+    await saveClient(clientToSave);
+}
 
         /**
          * Rempli le formulaire avec les données d'un client pour modification.
@@ -1253,6 +1262,7 @@ Adresse : ${p.adresse || 'Non renseignée'}
     </script>
 </body>
 </html>
+
 
 
 
