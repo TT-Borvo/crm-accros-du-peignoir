@@ -766,12 +766,12 @@ Cordialement,
         }
 
 
-        /**
-         * Ajoute un nouveau client ou modifie un client existant via Supabase.
-         * @param {Event} event - L'événement de soumission du formulaire.
-         */
-        leFormSubmit(event) {
-            event.preventDefault();
+/**
+ * Ajoute un nouveau client ou modifie un client existant via Supabase.
+ * @param {Event} event - L'événement de soumission du formulaire.
+ */
+async function leFormSubmit(event) { // <-- CORRECTION : AJOUT DE 'function' et 'async'
+    event.preventDefault();
             
             const numParticipants = document.getElementById('nbParticipants').value;
             const participants = [];
@@ -1253,6 +1253,7 @@ Adresse : ${p.adresse || 'Non renseignée'}
     </script>
 </body>
 </html>
+
 
 
 
