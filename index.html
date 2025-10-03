@@ -693,9 +693,9 @@ Cordialement,
          * Charge les clients depuis Supabase.
          */
 /**
-         * Charge les clients depuis Supabase (au lieu de LocalStorage).
-         */
-        async function loadClients() {
+ * Charge les clients depuis Supabase (au lieu de LocalStorage).
+ */
+async function loadClients() { // <-- Début de la fonction
     // 1. Récupérer l'utilisateur connecté
     const { data: { user } } = await supabaseClient.auth.getUser();
 
@@ -713,23 +713,22 @@ Cordialement,
     const { data, error } = await supabaseClient
         .from(TABLE_NAME)
         .select('*')
-        .eq('user_id', user.id) // <-- On utilise cet ID ici
+        .eq('user_id', user.id) // Filtre essentiel
         .order('created_at', { ascending: false });
 
-    // ... (suite de la fonction)
-}
-
+    // 3. GESTION DES ERREURS : Tout ce qui suit doit être DANS la fonction
     if (error) {
         console.error('Erreur lors du chargement des clients:', error);
-        return;
+        return; // Ce return est maintenant correctement à l'intérieur de la fonction
     }
 
+    // 4. PRÉPARATION et RENDU
     clients = data || [];
     
-    // ... (le reste de votre logique pour les clients.forEach...)
+    // [Ici, vous pouvez ajouter votre clients.forEach(...) si nécessaire]
     
     renderDashboard();
-}
+} // <-- FIN de la fonction
 
         /**
          * Fonction pour sauvegarder/mettre à jour un client dans Supabase.
@@ -1272,6 +1271,7 @@ Adresse : ${p.adresse || 'Non renseignée'}
     </script>
 </body>
 </html>
+
 
 
 
