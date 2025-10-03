@@ -696,30 +696,34 @@ Cordialement,
          * Charge les clients depuis Supabase (au lieu de LocalStorage).
          */
         async function loadClients() {
-            // Pas besoin de vérifier l'utilisateur ici, checkUserSession l'a déjà fait.
-            
-            const { data, error } = await supabaseClient
-                .from(TABLE_NAME)
-                .select('*')
-                .order('created_at', { ascending: false }); //
+    // 1. Récupérer l'utilisateur connecté
+    const { data: { user } } = await supabaseClient.auth.getUser();
 
-            if (error) {
-                console.error('Erreur lors du chargement des clients:', error);
-                return;
-            }
+    // S'il n'y a pas d'utilisateur connecté, on s'arrête
+    if (!user) {
+        clients = []; // Vide la liste des clients
+        renderDashboard();
+        return;
+    }
 
-            clients = data || [];
-            // Assurez-vous que chaque client a les propriétés facturee et commentaires (pour la rétrocompatibilité)
-            clients.forEach(client => {
-                if (typeof client.facturee === 'undefined') {
-                    client.facturee = false;
-                }
-                if (typeof client.commentaires === 'undefined') {
-                    client.commentaires = '';
-                }
-            });
-            renderDashboard();
-        }
+    // 2. Construire la requête avec le filtre utilisateur
+    const { data, error } = await supabaseClient
+        .from(TABLE_NAME)
+        .select('*')
+        .eq('user_id', user.id) // <--- AJOUT CRUCIAL DU FILTRE CÔTÉ CLIENT
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        console.error('Erreur lors du chargement des clients:', error);
+        return;
+    }
+
+    clients = data || [];
+    
+    // ... (le reste de votre logique pour les clients.forEach...)
+    
+    renderDashboard();
+}
 
         /**
          * Fonction pour sauvegarder/mettre à jour un client dans Supabase.
@@ -1262,6 +1266,7 @@ Adresse : ${p.adresse || 'Non renseignée'}
     </script>
 </body>
 </html>
+
 
 
 
