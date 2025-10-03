@@ -721,7 +721,8 @@ async function loadClients() { // <-- Début de la fonction
         console.error('Erreur lors du chargement des clients:', error);
         return; // Ce return est maintenant correctement à l'intérieur de la fonction
     }
-
+console.log("Données reçues de Supabase:", data);
+    
     // 4. PRÉPARATION et RENDU
     clients = data || [];
     
@@ -1271,6 +1272,7 @@ Adresse : ${p.adresse || 'Non renseignée'}
     </script>
 </body>
 </html>
+
 
 
 
