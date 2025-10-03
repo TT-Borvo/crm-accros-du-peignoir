@@ -305,7 +305,7 @@
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody> id="clientsTableBody"> 
                     </tbody>
                 </table>
             </div>
@@ -949,29 +949,33 @@ function editClient(id) {
  * Met à jour le tableau de bord avec les clients actuels en appliquant les filtres.
  */
 function renderDashboard() {
-    const tableBody = document.querySelector('#clientsTable tbody');
+    // MODIFICATION 1 : Utilisation d'un sélecteur direct pour le corps du tableau (tbody)
+    const tableBody = document.getElementById('clientsTableBody'); 
+    
+    // Récupération des autres éléments
     const noClientsMessage = document.getElementById('noClientsMessage');
     const table = document.getElementById('clientsTable');
     
-    // Vérification de sécurité au cas où le tableau n'est pas encore chargé
+    // Vérification de sécurité CRITIQUE pour le rendu
     if (!tableBody || !table || !noClientsMessage) {
-        console.warn("Éléments du tableau de bord non trouvés, le rendu est ignoré.");
+        // Cette erreur s'affichera si le tbody n'a pas l'ID 'clientsTableBody' dans le HTML !
+        console.error("Erreur critique: Le corps du tableau (clientsTableBody) n'a pas été trouvé. Vérifiez votre HTML.");
         return;
     }
     
     tableBody.innerHTML = ''; // Vide le tableau
 
+    // Récupération des valeurs des filtres (aucune modification ici, la logique 'all' est correcte)
     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
     const boxTypeFilter = document.getElementById('boxTypeFilter').value;
     const stationFilter = document.getElementById('stationFilter').value;
-    
-    // Récupération des valeurs des filtres de statut et facture
     const statusFilter = document.getElementById('statusFilter').value;
     const factureFilter = document.getElementById('factureeFilter').value;
 
 
     // Filtre les clients
     const filteredClients = clients.filter(client => {
+        // Logique de recherche (inchangée)
         const matchesSearch = searchTerm === '' || 
                               client.boxId.toLowerCase().includes(searchTerm) ||
                               client.participants.some(p => 
@@ -981,21 +985,22 @@ function renderDashboard() {
                                   (p.telephone && p.telephone.toLowerCase().includes(searchTerm))
                               );
                               
+        // Logique de filtrage (corrigée pour 'all')
         const matchesBoxType = boxTypeFilter === 'all' || client.typeBox === boxTypeFilter;
         const matchesStation = stationFilter === 'all' || client.station === stationFilter;
-        
-        // CORRECTION MAJEURE : Utilisation de 'all' au lieu de '' pour les filtres par défaut
-        // Nous assumons que les options "Tous les..." ont value="all" dans le HTML.
         const matchesStatus = statusFilter === 'all' || client.statut === statusFilter; 
 
-        // CORRECTION MAJEURE : Logique de filtrage par facture
         const matchesFacture = factureFilter === 'all' || 
                                (factureFilter === 'oui' && client.facturee === true) ||
                                (factureFilter === 'non' && client.facturee === false);
 
-        // Combinaison de tous les filtres
         return matchesSearch && matchesBoxType && matchesStation && matchesStatus && matchesFacture;
     });
+
+    // ----------------------------------------------------
+    // CONSOLE DE VÉRIFICATION
+    console.log("Nombre de dossiers à afficher (après filtres):", filteredClients.length);
+    // ----------------------------------------------------
 
     if (filteredClients.length === 0) {
         noClientsMessage.style.display = 'block';
@@ -1006,31 +1011,32 @@ function renderDashboard() {
         
         filteredClients.forEach(client => {
             const mainParticipant = client.participants[0];
-            const row = tableBody.insertRow();
             
-            // NOTE : J'ai mis à jour insertRow() avec la méthode .innerHTML
-            // pour garantir la compatibilité
-            row.innerHTML = `
-                <td>${mainParticipant.prenom} ${mainParticipant.nom}</td>
-                <td>${client.boxId}</td>
-                <td>${client.typeBox}</td>
-                <td>${client.station}</td>
-                <td>
-                    <select class="status-select status-${client.statut.replace(/\s/g, '-')}" onchange="updateClientStatus('${client.id}', this.value, this)">
-                        ${statuses.map(s => `<option value="${s}" ${s === client.statut ? 'selected' : ''}>${s}</option>`).join('')}
-                    </select>
-                </td>
-                <td>
-                    <button class="facture-button ${client.facturee ? 'facture-oui' : 'facture-non'}" onclick="updateFactureStatus('${client.id}')">
-                        ${client.facturee ? 'Facturé' : 'Non facturé'}
-                    </button>
-                </td>
-                <td>
-                    <button class="edit-btn" onclick="editClient('${client.id}')">Voir / Modifier</button>
-                    <button class="comment-btn" onclick="showComment('${client.id}')">Commentaires</button>
-                    <button class="delete-btn" onclick="deleteClient('${client.id}')">Supprimer</button>
-                    <button class="mail-btn" onclick="generateMail('${client.id}')">Générer mail</button>
-                </td>
+            // MODIFICATION 2 : Utilisation de innerHTML pour insérer la ligne 
+            // C'est plus simple et sécuritaire ici
+            tableBody.innerHTML += `
+                <tr>
+                    <td>${mainParticipant.prenom} ${mainParticipant.nom}</td>
+                    <td>${client.boxId}</td>
+                    <td>${client.typeBox}</td>
+                    <td>${client.station}</td>
+                    <td>
+                        <select class="status-select status-${client.statut.replace(/\s/g, '-')}" onchange="updateClientStatus('${client.id}', this.value, this)">
+                            ${statuses.map(s => `<option value="${s}" ${s === client.statut ? 'selected' : ''}>${s}</option>`).join('')}
+                        </select>
+                    </td>
+                    <td>
+                        <button class="facture-button ${client.facturee ? 'facture-oui' : 'facture-non'}" onclick="updateFactureStatus('${client.id}')">
+                            ${client.facturee ? 'Facturé' : 'Non facturé'}
+                        </button>
+                    </td>
+                    <td>
+                        <button class="edit-btn" onclick="editClient('${client.id}')">Voir / Modifier</button>
+                        <button class="comment-btn" onclick="showComment('${client.id}')">Commentaires</button>
+                        <button class="delete-btn" onclick="deleteClient('${client.id}')">Supprimer</button>
+                        <button class="mail-btn" onclick="generateMail('${client.id}')">Générer mail</button>
+                    </td>
+                </tr>
             `;
         });
     }
@@ -1286,6 +1292,7 @@ Adresse : ${p.adresse || 'Non renseignée'}
     </script>
 </body>
 </html>
+
 
 
 
