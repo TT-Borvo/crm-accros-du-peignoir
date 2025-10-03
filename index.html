@@ -713,6 +713,7 @@ async function loadClients() { // <-- Début de la fonction
     const { data, error } = await supabaseClient
         .from(TABLE_NAME)
         .select('*')
+        .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
     // 3. GESTION DES ERREURS : Tout ce qui suit doit être DANS la fonction
@@ -1270,6 +1271,7 @@ Adresse : ${p.adresse || 'Non renseignée'}
     </script>
 </body>
 </html>
+
 
 
 
