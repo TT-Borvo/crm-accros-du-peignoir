@@ -699,19 +699,25 @@ Cordialement,
     // 1. Récupérer l'utilisateur connecté
     const { data: { user } } = await supabaseClient.auth.getUser();
 
-    // S'il n'y a pas d'utilisateur connecté, on s'arrête
     if (!user) {
-        clients = []; // Vide la liste des clients
+        console.log("Erreur de connexion: Utilisateur non trouvé.");
+        clients = [];
         renderDashboard();
         return;
     }
-
+    
+    // VÉRIFICATION CLÉ : LIGNE À AJOUTER POUR LE DEBUG
+    console.log("UUID de l'utilisateur connecté:", user.id); 
+    
     // 2. Construire la requête avec le filtre utilisateur
     const { data, error } = await supabaseClient
         .from(TABLE_NAME)
         .select('*')
-        .eq('user_id', user.id) // <--- AJOUT CRUCIAL DU FILTRE CÔTÉ CLIENT
+        .eq('user_id', user.id) // <-- On utilise cet ID ici
         .order('created_at', { ascending: false });
+
+    // ... (suite de la fonction)
+}
 
     if (error) {
         console.error('Erreur lors du chargement des clients:', error);
@@ -1266,6 +1272,7 @@ Adresse : ${p.adresse || 'Non renseignée'}
     </script>
 </body>
 </html>
+
 
 
 
