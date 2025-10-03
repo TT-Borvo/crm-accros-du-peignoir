@@ -952,12 +952,20 @@ function renderDashboard() {
     const tableBody = document.querySelector('#clientsTable tbody');
     const noClientsMessage = document.getElementById('noClientsMessage');
     const table = document.getElementById('clientsTable');
+    
+    // Vérification de sécurité au cas où le tableau n'est pas encore chargé
+    if (!tableBody || !table || !noClientsMessage) {
+        console.warn("Éléments du tableau de bord non trouvés, le rendu est ignoré.");
+        return;
+    }
+    
     tableBody.innerHTML = ''; // Vide le tableau
 
     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
     const boxTypeFilter = document.getElementById('boxTypeFilter').value;
     const stationFilter = document.getElementById('stationFilter').value;
-    // NOUVEAU : Récupération des valeurs des filtres de statut et facture
+    
+    // Récupération des valeurs des filtres de statut et facture
     const statusFilter = document.getElementById('statusFilter').value;
     const factureFilter = document.getElementById('factureeFilter').value;
 
@@ -965,21 +973,23 @@ function renderDashboard() {
     // Filtre les clients
     const filteredClients = clients.filter(client => {
         const matchesSearch = searchTerm === '' || 
-                            client.boxId.toLowerCase().includes(searchTerm) ||
-                            client.participants.some(p => 
-                                p.nom.toLowerCase().includes(searchTerm) ||
-                                p.prenom.toLowerCase().includes(searchTerm) ||
-                                (p.email && p.email.toLowerCase().includes(searchTerm)) ||
-                                (p.telephone && p.telephone.toLowerCase().includes(searchTerm))
-                            );
-        const matchesBoxType = boxTypeFilter === '' || client.typeBox === boxTypeFilter;
-        const matchesStation = stationFilter === '' || client.station === stationFilter;
+                              client.boxId.toLowerCase().includes(searchTerm) ||
+                              client.participants.some(p => 
+                                  p.nom.toLowerCase().includes(searchTerm) ||
+                                  p.prenom.toLowerCase().includes(searchTerm) ||
+                                  (p.email && p.email.toLowerCase().includes(searchTerm)) ||
+                                  (p.telephone && p.telephone.toLowerCase().includes(searchTerm))
+                              );
+                              
+        const matchesBoxType = boxTypeFilter === 'all' || client.typeBox === boxTypeFilter;
+        const matchesStation = stationFilter === 'all' || client.station === stationFilter;
         
-        // NOUVEAU : Logique de filtrage par statut
-        const matchesStatus = statusFilter === '' || client.statut === statusFilter;
+        // CORRECTION MAJEURE : Utilisation de 'all' au lieu de '' pour les filtres par défaut
+        // Nous assumons que les options "Tous les..." ont value="all" dans le HTML.
+        const matchesStatus = statusFilter === 'all' || client.statut === statusFilter; 
 
-        // NOUVEAU : Logique de filtrage par facture (client.facturee est un booléen)
-        const matchesFacture = factureFilter === '' || 
+        // CORRECTION MAJEURE : Logique de filtrage par facture
+        const matchesFacture = factureFilter === 'all' || 
                                (factureFilter === 'oui' && client.facturee === true) ||
                                (factureFilter === 'non' && client.facturee === false);
 
@@ -993,9 +1003,13 @@ function renderDashboard() {
     } else {
         noClientsMessage.style.display = 'none';
         table.style.display = 'table';
+        
         filteredClients.forEach(client => {
             const mainParticipant = client.participants[0];
             const row = tableBody.insertRow();
+            
+            // NOTE : J'ai mis à jour insertRow() avec la méthode .innerHTML
+            // pour garantir la compatibilité
             row.innerHTML = `
                 <td>${mainParticipant.prenom} ${mainParticipant.nom}</td>
                 <td>${client.boxId}</td>
@@ -1007,9 +1021,9 @@ function renderDashboard() {
                     </select>
                 </td>
                 <td>
-                   <button class="facture-button ${client.facturee ? 'facture-oui' : 'facture-non'}" onclick="updateFactureStatus('${client.id}')">
-                      ${client.facturee ? 'Facturé' : 'Non facturé'}
-                   </button>
+                    <button class="facture-button ${client.facturee ? 'facture-oui' : 'facture-non'}" onclick="updateFactureStatus('${client.id}')">
+                        ${client.facturee ? 'Facturé' : 'Non facturé'}
+                    </button>
                 </td>
                 <td>
                     <button class="edit-btn" onclick="editClient('${client.id}')">Voir / Modifier</button>
@@ -1272,6 +1286,7 @@ Adresse : ${p.adresse || 'Non renseignée'}
     </script>
 </body>
 </html>
+
 
 
 
