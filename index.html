@@ -854,24 +854,25 @@ function editClient(id) {
          * Supprime un client de la liste dans Supabase.
          * @param {number} id - L'ID (Supabase) du client à supprimer.
          */
-       async function deleteClient(id) {
+      async function deleteClient(id) {
     // L'ID est passé comme une chaîne de caractères
     const client = clients.find(c => String(c.id) === id);
     if (!client) return;
 
     if (confirm("Êtes-vous sûr de vouloir supprimer ce dossier client ?")) {
-        const { error } = await supabaseClient
-            .from(TABLE_NAME)
-            .delete()
-            .eq('id', client.id); // Utilisation de l'ID string (UUID)
+        // ... (Code de suppression inchangé) ...
 
         if (error) {
             console.error("Erreur lors de la suppression:", error);
             alert("Erreur lors de la suppression du dossier.");
         } else {
-            // Met à jour la liste locale
-            clients = clients.filter(c => c.id !== client.id);
-            renderDashboard();
+            // REMPLACER LES DEUX LIGNES EXISTANTES PAR CELA :
+            // Ceci force le rechargement des données fraîches depuis Supabase.
+            // Le "await" est CRUCIAL ici.
+            await loadClients(); 
+            
+            // Note: loadClients() devrait se terminer par renderDashboard(), 
+            // donc pas besoin de l'appeler à nouveau ici.
         }
     }
 }
@@ -1299,6 +1300,7 @@ Adresse : ${p.adresse || 'Non renseignée'}
     </script>
 </body>
 </html>
+
 
 
 
