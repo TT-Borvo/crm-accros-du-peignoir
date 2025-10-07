@@ -857,17 +857,29 @@ async function deleteClient(id) {
     if (!client) return;
 
     if (confirm("Êtes-vous sûr de vouloir supprimer ce dossier client ?")) {
-        // CODE DE SUPPRESSION RÉINTRODUIT ET UTILISE LE client.id TROUVÉ
-        const { error } = await supabaseClient
-            .from(TABLE_NAME)
-            .delete()
-            .eq('id', client.id); // Utilisation de l'ID UUID
+        // Déclaration explicite de la variable de résultat
+        let deleteError = null; 
 
-        if (error) {
-            console.error("Erreur lors de la suppression:", error);
-            alert("Erreur lors de la suppression du dossier.");
+        try {
+            // L'appel à la BDD est ici, et il est essentiel qu'il soit propre
+            const { error } = await supabaseClient
+                .from(TABLE_NAME)
+                .delete()
+                .eq('id', client.id);
+
+            deleteError = error; // Stocke l'erreur (ou null si succès)
+
+        } catch (e) {
+            // Bloc de sécurité si l'appel Supabase lui-même échoue
+            console.error("Erreur critique d'appel Supabase:", e);
+            deleteError = e; 
+        }
+
+        if (deleteError) {
+            console.error("Erreur lors de la suppression:", deleteError);
+            alert("Erreur lors de la suppression du dossier. Vérifiez la console.");
         } else {
-            // Mise à jour de l'affichage en rechargeant les données fraîches du serveur
+            // Si aucune erreur, on recharge les données fraîches du serveur (anti-cache)
             await loadClients();
             alert("Dossier supprimé avec succès."); 
         }
@@ -1297,6 +1309,7 @@ Adresse : ${p.adresse || 'Non renseignée'}
     </script>
 </body>
 </html>
+
 
 
 
