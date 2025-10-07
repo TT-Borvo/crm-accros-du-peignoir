@@ -971,7 +971,7 @@ function renderDashboard() {
     const boxTypeFilter = document.getElementById('boxTypeFilter').value;
     const stationFilter = document.getElementById('stationFilter').value;
     const statusFilter = document.getElementById('statusFilter').value;
-    const factureeFilter = document.getElementById('factureFilter').value;
+    const factureeFilter = document.getElementById('factureeFilter').value;
 
 
     // Filtre les clients
@@ -992,9 +992,10 @@ function renderDashboard() {
         const matchesStatus = (statusFilter === 'all' || statusFilter === '') || client.statut === statusFilter; 
         
         // La logique de facture doit aussi inclure la chaîne vide
-        const matchesFacture = (factureeFilterValue === 'all' || factureeFilterValue === '') || 
-                       (factureeFilterValue === 'oui' && client.facturee === true) ||
-                       (factureeFilterValue === 'non' && client.facturee === false);
+        // La logique corrigée utilise la nouvelle variable "factureeFilter"
+const matchesFacture = (factureeFilter === 'all' || factureeFilter === '') || 
+                       (factureeFilter === 'oui' && client.facturee === true) ||
+                       (factureeFilter === 'non' && client.facturee === false);
         
         return matchesSearch && matchesBoxType && matchesStation && matchesStatus && matchesFacture;
     });
@@ -1294,6 +1295,7 @@ Adresse : ${p.adresse || 'Non renseignée'}
     </script>
 </body>
 </html>
+
 
 
 
