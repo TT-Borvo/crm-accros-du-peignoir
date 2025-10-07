@@ -696,7 +696,7 @@ Cordialement,
 /**
  * Charge les clients depuis Supabase (au lieu de LocalStorage).
  */
-async function loadClients() { // <-- Début de la fonction
+async function loadClients() {
     // 1. Récupérer l'utilisateur connecté
     const { data: { user } } = await supabaseClient.auth.getUser();
 
@@ -707,30 +707,27 @@ async function loadClients() { // <-- Début de la fonction
         return;
     }
     
-    // VÉRIFICATION CLÉ : LIGNE À AJOUTER POUR LE DEBUG
-    console.log("UUID de l'utilisateur connecté:", user.id); 
+    // VÉRIFICATION CLÉ
+    console.log("UUID de l'utilisateur connecté:", user.id);    
     
     // 2. Construire la requête avec le filtre utilisateur
- const { data, error } = await supabaseClient
-    .from(TABLE_NAME)
-    .select('*', { head: false }) // <--- Le point-virgule est À LA FIN de .order()
-    .eq('user_id', user.id)
-    .order('created_at', { ascending: false }); // <--- Le seul point-virgule
+    const { data, error } = await supabaseClient
+        .from(TABLE_NAME)
+        .select('*', { head: false }) // L'option anti-cache
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false }); // Un seul point-virgule final
 
-    // 3. GESTION DES ERREURS : Tout ce qui suit doit être DANS la fonction
+    // 3. GESTION DES ERREURS
     if (error) {
         console.error('Erreur lors du chargement des clients:', error);
-        return; // Ce return est maintenant correctement à l'intérieur de la fonction
+        return;
     }
-console.log("Données reçues de Supabase:", data);
+    console.log("Données reçues de Supabase:", data);
     
     // 4. PRÉPARATION et RENDU
     clients = data || [];
-    
-    // [Ici, vous pouvez ajouter votre clients.forEach(...) si nécessaire]
-    
     renderDashboard();
-} // <-- FIN de la fonction
+}
 
         /**
          * Fonction pour sauvegarder/mettre à jour un client dans Supabase.
@@ -1300,6 +1297,7 @@ Adresse : ${p.adresse || 'Non renseignée'}
     </script>
 </body>
 </html>
+
 
 
 
