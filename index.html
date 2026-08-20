@@ -369,11 +369,7 @@
 
         <div id="mailGenerator" class="section">
             <h2>Générateur de mail</h2>
-<div class="mail-block">
-    <h3>Destinataire :</h3>
-    <div id="mailRecipient" class="mail-content"></div>
-    <button class="copy-btn" onclick="copyMailRecipient()">Copier l'adresse électronique</button>
-</div>
+
             <div class="mail-block">
                 <h3>Objet du mail :</h3>
                 <div id="mailSubject" class="mail-content"></div>
@@ -511,54 +507,6 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         // =========================================================================================
         
         // Modèles de mail
-    const contactsParBoxEtStation = {
-    "BOX Premiers émois thermaux": {
-        "Bourbon-Lancy": "contact@stbl.com",
-        "Saint-Laurent-les-Bains": "Karine.QUET@chainethermale.fr",
-        "Saint-Honoré-les-Bains": "sainthonorelesbains@chainethermale.fr",
-        "Royat-Chamalières": "reservation@thermesderoyat.fr",
-        "Néris-les-Bains": "contact@neriades.com",
-        "Le Mont-Dore": "lemontdore@chainethermale.fr, Helene.Burny@chainethermale.fr",
-        "La Bourboule": "contact.thermes@grandsthermes.com",
-        "Cransac-les-Thermes": "cransaclesthermes@chainethermale.fr",
-        "Châteauneuf-les-Bains": "info@thermes-chateauneuf.fr"
-    },
-    "Box Divine évasion au spa": {
-        "Bourbon-Lancy": "contact@stbl.com, contact@celto.fr",
-        "Bourbon-l’Archambault": "bourbonlarchambault@chainethermale.fr",
-        "Saint-Honoré-les-Bains": "sainthonorelesbains@chainethermale.fr",
-        "Royat-Chamalières": "reservation@thermesderoyat.fr, reservation@royatonic.com",
-        "Néris-les-Bains": "contact@neriades.com",
-        "Le Mont-Dore": "lemontdore@chainethermale.fr, Helene.Burny@chainethermale.fr",
-        "Montrond-les-Bains": "contact@thermes-montrond.com, contact@lesileades.com",
-        "Cransac-les-Thermes": "cransaclesthermes@chainethermale.fr",
-        "Châteauneuf-les-Bains": "info@thermes-chateauneuf.fr",
-        "Vals-les-Bains": "accueil@thermesdevals.com"
-    },
-    "BOX Eveil des sens": {
-        "Bourbon-Lancy": "contact@stbl.com, cloitre@stbl.fr",
-        "La Bourboule": "contact.thermes@grandsthermes.com",
-        "Châteauneuf-les-Bains": "info@thermes-chateauneuf.fr, castel-hotel-1904@orange.fr",
-        "Royat-Chamalières": "reservation@thermesderoyat.fr, contact@hotel-auvergne.com"
-    },
-    "Box Le séjour des Accros du Peignoir": {
-        "La Bourboule": "contact.thermes@grandsthermes.com, chalet.pompin@gmail.com",
-        "Bourbon-Lancy": "contact@stbl.com, contact@celto.fr, cloitre@stbl.fr",
-        "Châteauneuf-les-Bains": "info@thermes-chateauneuf.fr, castel-hotel-1904@orange.fr",
-        "Royat-Chamalières": "reservation@thermesderoyat.fr, contact@hotel-auvergne.com",
-        "Châtel-Guyon": "resa@aiga-resort.com, partenariat-aiga@aiga-resort.com",
-        "Cransac-les-Thermes": "cransaclesthermes@chainethermale.fr",
-        "Chaudes-Aigues": "info@caleden.com",
-        "Saint-Laurent-les-Bains": "Karine.QUET@chainethermale.fr, saintlaurentlesbains@chainethermale.fr",
-        "Vals-les-Bains": "emma.fargier@domainedesbains.fr"
-    },
-    "Box Le séjour des Accros du Peignoir PREMIUM": {
-        "La Bourboule": "contact.thermes@grandsthermes.com, chalet.pompin@gmail.com",
-        "Bourbon-Lancy": "contact@stbl.com, contact@celto.fr, cloitre@stbl.fr",
-        "Châtel-Guyon": "resa@aiga-resort.com, partenariat-aiga@aiga-resort.com",
-        "Vals-les-Bains": "emma.fargier@domainedesbains.fr"
-    }
-};
         const mailSubjectTemplate = `Réservation Box Accros du Peignoir`;
         const mailBodyTemplate = `Bonjour,
 {{Sexe}} {{Nom et prénom du client}} a fait une demande de réservation pour la {{Type de Box}} à {{Ville/ Station choisi pour réaliser la box}}, pour {{Nombre de client participant}} personnes.
@@ -1118,74 +1066,36 @@ const matchesFacture = (factureeFilter === 'all' || factureeFilter === '') ||
          * @param {number} id - L'ID du client.
          */
 function generateMail(id) {
+    // L'ID est passé comme une chaîne de caractères
     const client = clients.find(c => String(c.id) === id);
     if (!client) return;
     
     const mainParticipant = client.participants[0];
     const numParticipants = client.participants.length;
-    const boxType = client.typeBox;
-    const station = client.station;
-    
-    let recipientEmail = 'adresse@non-renseignee.fr';
-    if (contactsParBoxEtStation[boxType] && contactsParBoxEtStation[boxType][station]) {
-        recipientEmail = contactsParBoxEtStation[boxType][station];
-    }
-    
-    const boxInfo = boxDetails[boxType];
-    const composition = boxInfo.composition[station] || "Composition non disponible.";
-    
-    let prix_box;
-    let prix_box_10_percent;
+            const boxType = client.typeBox;
+            const station = client.station;
+            
+            // Récupère les détails de la box et de la station
+            const boxInfo = boxDetails[boxType];
+            const composition = boxInfo.composition[station] || "Composition non disponible.";
+            
+            let prix_box;
+            let prix_box_10_percent;
 
-    if (boxType === "BOX Eveil des sens") {
-        prix_box = `pour les soins ${boxInfo.price_soins} et pour le restaurant ${boxInfo.price_restaurant}`;
-        prix_box_10_percent = `pour les soins ${boxInfo.price_10_percent_soins} et pour le restaurant ${boxInfo.price_10_percent_restaurant}`;
-    } else if (boxType === "Box Le séjour des Accros du Peignoir" || boxType === "Box Le séjour des Accros du Peignoir PREMIUM") {
-        prix_box = `pour les soins ${boxInfo.price_soins} et pour l’hôtellerie ${boxInfo.price_hotellerie}`;
-        prix_box_10_percent = `pour les soins ${boxInfo.price_10_percent_soins} et pour l’hôtellerie ${boxInfo.price_10_percent_hotellerie}`;
-    } else {
-        prix_box = boxInfo.price;
-        prix_box_10_percent = boxInfo.price_10_percent_off;
-    }
+            if (boxType === "BOX Eveil des sens") {
+                prix_box = `pour les soins ${boxInfo.price_soins} et pour le restaurant ${boxInfo.price_restaurant}`;
+                prix_box_10_percent = `pour les soins ${boxInfo.price_10_percent_soins} et pour le restaurant ${boxInfo.price_10_percent_restaurant}`;
+            } else if (boxType === "Box Le séjour des Accros du Peignoir") {
+                prix_box = `pour les soins ${boxInfo.price_soins} et pour l’hôtellerie ${boxInfo.price_hotellerie}`;
+                prix_box_10_percent = `pour les soins ${boxInfo.price_10_percent_soins} et pour l’hôtellerie ${boxInfo.price_10_percent_hotellerie}`;
+            } else if (boxType === "Box Le séjour des Accros du Peignoir PREMIUM") {
+                prix_box = `pour les soins ${boxInfo.price_soins} et pour l’hôtellerie ${boxInfo.price_hotellerie}`;
+                prix_box_10_percent = `pour les soins ${boxInfo.price_10_percent_soins} et pour l’hôtellerie ${boxInfo.price_10_percent_hotellerie}`;
+            } else {
+                prix_box = boxInfo.price;
+                prix_box_10_percent = boxInfo.price_10_percent_off;
+            }
 
-    let clientInfoString = '';
-    client.participants.forEach((p, index) => {
-        clientInfoString += `
-Informations du participant ${index + 1} :
-Nom : ${p.nom}
-Prénom : ${p.prenom}
-Email : ${p.email}
-Téléphone : ${p.telephone || 'Non renseigné'}
-Adresse : ${p.adresse || 'Non renseignée'}
-`;
-    });
-
-    const mailBody = mailBodyTemplate
-        .replace(/{{Sexe}}/g, 'Monsieur ou Madame')
-        .replace(/{{Nom et prénom du client}}/g, `${mainParticipant.nom} ${mainParticipant.prenom}`)
-        .replace(/{{Type de Box}}/g, boxType)
-        .replace(/{{Ville\/ Station choisi pour réaliser la box}}/g, station)
-        .replace(/{{Nombre de client participant}}/g, numParticipants)
-        .replace(/{{Composition de la Box}}/g, composition)
-        .replace(/{{Prix de la box}}/g, prix_box)
-        .replace(/{{Prix de la box - 10%}}/g, prix_box_10_percent)
-        .replace(/{{Date souhaitait par le client}}/g, client.dates || 'Non renseignées')
-        .replace(/{{Ensemble des informations des clients}}/g, clientInfoString);
-    
-    document.getElementById('mailRecipient').textContent = recipientEmail;
-    document.getElementById('mailSubject').textContent = mailSubjectTemplate;
-    document.getElementById('mailBody').textContent = mailBody;
-    showSection('mailGenerator');
-}
-function copyMailRecipient() {
-    const mailContent = document.getElementById('mailRecipient').textContent;
-    navigator.clipboard.writeText(mailContent).then(() => {
-        alert("L'adresse électronique a été copiée");
-    }).catch(err => {
-        console.error("Erreur lors de la copie", err);
-        alert("Erreur lors de la copie de l'adresse");
-    });
-}
             // Construire la liste des informations des clients
             let clientInfoString = '';
             client.participants.forEach((p, index) => {
