@@ -414,11 +414,10 @@
         </div>
 
     </div> 
-<script>
 // Début du JavaScript
 
         // =========================================================================================
-        // 1. Variables Globales (Vos variables existantes)
+        // 1. Variables Globales
         // =========================================================================================
         const CLIENTS_STORAGE_KEY = 'clients';
         const participantsContainer = document.getElementById('participantsContainer');
@@ -427,17 +426,16 @@
         let editingId = null;
 
         // =========================================================================================
-        // 2. Configuration Supabase (CETTE PARTIE DOIT ÊTRE ICI)
+        // 2. Configuration Supabase
         // =========================================================================================
-        const SUPABASE_URL = 'https://reaqsrlhdxpvpozwelmq.supabase.co'; 
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlYXFzcmxoZHhwdnBvendlbG1xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MjI1MTMsImV4cCI6MjA3NDE5ODUxM30.HouILqtaoOkrBGPk8lhJzrePAmGWkftyxM--CVlBvsE'; 
+        const SUPABASE_URL = 'caché volontairement'; 
+        const SUPABASE_ANON_KEY = 'caché volontairement'; 
         const TABLE_NAME = 'clients'; 
         
-// NOUVEAU CODE (Corrige le conflit) :
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
         // =========================================================================================
-        // 3. Fonctions d'Authentification (NOUVEAU CODE)
+        // 3. Fonctions d'Authentification
         // =========================================================================================
 
         async function leSignup() {
@@ -489,12 +487,10 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             const { data: { user } } = await supabaseClient.auth.getUser();
 
             if (user) {
-                // Utilisateur connecté : Afficher l'application
                 document.getElementById('authSection').style.display = 'none';
                 document.getElementById('appContent').style.display = 'block';
                 loadClients();
             } else {
-                // Utilisateur non connecté : Afficher la page de connexion
                 showAuthScreen();
             }
         }
@@ -508,58 +504,9 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         }
 
         // =========================================================================================
-        // 4. Modèles de mail et Données des Boxes (Vos constantes existantes, elles viennent ici)
+        // 4. Modèles de mail et Données des Boxes
         // =========================================================================================
         
-        // Modèles de mail
-    const contactsParBoxEtStation = {
-    "BOX Premiers émois thermaux": {
-        "Bourbon-Lancy": "contact@stbl.com",
-        "Saint-Laurent-les-Bains": "Karine.QUET@chainethermale.fr",
-        "Saint-Honoré-les-Bains": "sainthonorelesbains@chainethermale.fr",
-        "Royat-Chamalières": "reservation@thermesderoyat.fr",
-        "Néris-les-Bains": "contact@neriades.com",
-        "Le Mont-Dore": "lemontdore@chainethermale.fr, Helene.Burny@chainethermale.fr",
-        "La Bourboule": "contact.thermes@grandsthermes.com",
-        "Cransac-les-Thermes": "cransaclesthermes@chainethermale.fr",
-        "Châteauneuf-les-Bains": "info@thermes-chateauneuf.fr"
-    },
-    "Box Divine évasion au spa": {
-        "Bourbon-Lancy": "contact@stbl.com, contact@celto.fr",
-        "Bourbon-l’Archambault": "bourbonlarchambault@chainethermale.fr",
-        "Saint-Honoré-les-Bains": "sainthonorelesbains@chainethermale.fr",
-        "Royat-Chamalières": "reservation@thermesderoyat.fr, reservation@royatonic.com",
-        "Néris-les-Bains": "contact@neriades.com",
-        "Le Mont-Dore": "lemontdore@chainethermale.fr, Helene.Burny@chainethermale.fr",
-        "Montrond-les-Bains": "contact@thermes-montrond.com, contact@lesileades.com",
-        "Cransac-les-Thermes": "cransaclesthermes@chainethermale.fr",
-        "Châteauneuf-les-Bains": "info@thermes-chateauneuf.fr",
-        "Vals-les-Bains": "accueil@thermesdevals.com"
-    },
-    "BOX Eveil des sens": {
-        "Bourbon-Lancy": "contact@stbl.com, cloitre@stbl.fr",
-        "La Bourboule": "contact.thermes@grandsthermes.com",
-        "Châteauneuf-les-Bains": "info@thermes-chateauneuf.fr, castel-hotel-1904@orange.fr",
-        "Royat-Chamalières": "reservation@thermesderoyat.fr, contact@hotel-auvergne.com"
-    },
-    "Box Le séjour des Accros du Peignoir": {
-        "La Bourboule": "contact.thermes@grandsthermes.com, chalet.pompin@gmail.com",
-        "Bourbon-Lancy": "contact@stbl.com, contact@celto.fr, cloitre@stbl.fr",
-        "Châteauneuf-les-Bains": "info@thermes-chateauneuf.fr, castel-hotel-1904@orange.fr",
-        "Royat-Chamalières": "reservation@thermesderoyat.fr, contact@hotel-auvergne.com",
-        "Châtel-Guyon": "resa@aiga-resort.com, partenariat-aiga@aiga-resort.com",
-        "Cransac-les-Thermes": "cransaclesthermes@chainethermale.fr",
-        "Chaudes-Aigues": "info@caleden.com",
-        "Saint-Laurent-les-Bains": "Karine.QUET@chainethermale.fr, saintlaurentlesbains@chainethermale.fr",
-        "Vals-les-Bains": "emma.fargier@domainedesbains.fr"
-    },
-    "Box Le séjour des Accros du Peignoir PREMIUM": {
-        "La Bourboule": "contact.thermes@grandsthermes.com, chalet.pompin@gmail.com",
-        "Bourbon-Lancy": "contact@stbl.com, contact@celto.fr, cloitre@stbl.fr",
-        "Châtel-Guyon": "resa@aiga-resort.com, partenariat-aiga@aiga-resort.com",
-        "Vals-les-Bains": "emma.fargier@domainedesbains.fr"
-    }
-};
         const mailSubjectTemplate = `Réservation Box Accros du Peignoir`;
         const mailBodyTemplate = `Bonjour,
 {{Sexe}} {{Nom et prénom du client}} a fait une demande de réservation pour la {{Type de Box}} à {{Ville/ Station choisi pour réaliser la box}}, pour {{Nombre de client participant}} personnes.
@@ -578,17 +525,16 @@ Merci d’avance de votre réponse.
 Bien cordialement,
 `;
 
-        // Modèles de mails d'activation
         const activationMailSubjectTemplate = `Votre Box est activée – Informations pour finaliser votre réservation`;
         const activationMailBodyTemplate1 = `Bonjour,
 Nous vous remercions d'avoir activé votre Box de soins. Afin de finaliser votre réservation, nous vous invitons à nous fournir les informations suivantes :
 Station thermale de votre choix : Veuillez indiquer la station où vous souhaitez réaliser votre expérience bien-être.
-- Date souhaitée : Merci de nous préciser la date à laquelle vous souhaitez effectuer votre soin.
-- Informations personnelles :
-- Nom et prénom :
-- Numéro de téléphone :
-- Adresse e-mail :
-- Adresse postale complète :
+Date souhaitée : Merci de nous préciser la date à laquelle vous souhaitez effectuer votre soin.
+Informations personnelles :
+Nom et prénom :
+Numéro de téléphone :
+Adresse e-mail :
+Adresse postale complète :
 
 Une fois ces informations reçues, un membre de notre équipe vous contactera dans les plus brefs délais pour finaliser les détails de votre réservation.
 
@@ -600,18 +546,18 @@ Cordialement,
         const activationMailBodyTemplate2 = `Bonjour,
 Nous vous remercions d'avoir activé votre Box de soins. Afin de finaliser votre réservation, nous vous invitons à nous fournir les informations suivantes :
 Station thermale de votre choix : Veuillez indiquer la station où vous souhaitez réaliser votre expérience bien-être.
-- Date souhaitée : Merci de nous préciser la date à laquelle vous souhaitez effectuer votre soin.
-- Informations personnelles :
-- Nom et prénom :
-- Numéro de téléphone :
-- Adresse e-mail :
-- Adresse postale complète :
+Date souhaitée : Merci de nous préciser la date à laquelle vous souhaitez effectuer votre soin.
+Informations personnelles :
+Nom et prénom :
+Numéro de téléphone :
+Adresse e-mail :
+Adresse postale complète :
 
 Informations personnelles de l'accompagnant :
-- Nom et prénom :
-- Numéro de téléphone :
-- Adresse e-mail :
-- Adresse postale complète :
+Nom et prénom :
+Numéro de téléphone :
+Adresse e-mail :
+Adresse postale complète :
 
 Une fois ces informations reçues, un membre de notre équipe vous contactera dans les plus brefs délais pour finaliser les détails de votre réservation.
 
@@ -620,7 +566,6 @@ Nous restons à votre disposition pour toute question supplémentaire.
 Cordialement,
 `;
 
-        // Données complètes des boxes et stations
         const boxDetails = {
             "BOX Premiers émois thermaux": {
                 price: "49€",
@@ -676,7 +621,7 @@ Cordialement,
                     'Châteauneuf-les-Bains': 'Offrez-vous un moment d’évasion : un massage relaxant de 30 minutes, accompagné de 4 soins thermaux au choix parmi douche colonne, bain hydromassant, application de cataplasmes d’argile, bassin thermal ou étuve locale. Prolongez cette parenthèse de bien-être avec une pause gourmande autour d’une boisson chaude et de gourmandises aux thermes. Votre nuit Douillette “Chez Nanette” aux Maisons du Castel de Saint-Gervais d’Auvergne avec petit-déjeuner-buffet. Pour le dîner, vous dégusterez le Menu spécial de l’Auberge “Les Accros du Peignoir” comprenant une entrée et un plat ou un plat et un dessert. Le menu varie au gré du marché et des saisons. Au printemps et en été, les légumes du jardin seront à l’honneur.',
                     'Châtel-Guyon': '1 nuit en studio Côme au sein d’Aïga résidence**** directement relié à votre espace de soins avec petit-déjeuner buffet. 1 douche sous affusion ou 1 douche locale des mains et des pieds, 1 bain de boue thermale ou 1 douche de boue thermale et 1 bain hydromassant au sein d’Aïga spa thermal. + Accès libre aux équipements de bien-être du spa la demi-journée de vos soins : bassin de détente en eau thermale (cols de cygne, couloir de nage à contre-courant, transats à bulles immergés…), bain à remous extérieur, solarium, hammams, salle de repos en lumière de wood, tisanerie et douches expérientielles.',
                     'Cransac-les-Thermes': 'Au coeur d’un établissement qui domine la ville et se dresse au cœur d’une belle forêt d’acacias : 4 soins thermaux à choisir parmi : douche locales de gaz sec (rachis, épaules, genoux, coudes ou hanches), étuve mains/pieds, vaporarium, étuve générale, berthollaix. Spa : un enveloppement de kaolin sur lit jouvence (20 minutes) + un lit hydromassant (15 minutes) + un bain hydromassant multisensoriel (15 minutes) + un modelage aromatique détente (30 minutes). 1 nuit dans notre résidence Les Logis des Boisements ***, une résidence de grand confort avec studios et appartements climatisés directement ouverts sur la nature et l’agrément d’une vaste loggia privée.',
-                    'Chaudes-Aigues': 'Un week-end au plus proche de l’Eden pour retrouver sérénité, bien-être et relaxation. Venez découvrir notre établissement avec 1 jour, 4 soins thermaux :– application de cataplasmes de boue thermale,– 1 douche au jet personnalisée,– 1 bain bouillonnant,– 1 massage sous affusion d’eau thermale. Et 1 jour avec :– 1 entrée thermoludique 2h30,– 1 massage cuir chevelu,Votre hébergement à l’hôtel du Ban** en chambre avec terrasse.Petits déjeuners servis en chambre à l’hôtel du Ban pour un instant de détente privilégié et une délicieuse harmonie.',
+                    'Chaudes-Aigues': 'Un week-end au plus proche de l’Eden pour retrouver sérénité, bien-être et relaxation. Venez découvrir notre établissement avec 1 jour, 4 soins thermaux : application de cataplasmes de boue thermale, 1 douche au jet personnalisée, 1 bain bouillonnant, 1 massage sous affusion d’eau thermale. Et 1 jour avec : 1 entrée thermoludique 2h30, 1 massage cuir chevelu,Votre hébergement à l’hôtel du Ban** en chambre avec terrasse.Petits déjeuners servis en chambre à l’hôtel du Ban pour un instant de détente privilégié et une délicieuse harmonie.',
                     'Royat-Chamalières': 'Un programme de soins aux thermes de Royat (Bain bouillonnant / Application de boue/ Bain de gaz) et un forfait Royatonic Bains & Spa comprenant un coffret lit hydromassant (20 min) et un accès libre 2h30 aux installations du centre le jour du soin : bains intérieurs et extérieurs, hammams et saunas, salles de repos. Votre hébergement en demi-pension à l’hôtel Royal Saint Mart *** une élégante demeure bourgeoise, lovée au coeœur de ses vastes jardins fleuris, qui dégage une atmosphère de charme et de sérénité telle qu’on pouvait la vivre à la Belle-Epoque.',
                     'Vals-les-Bains': 'Venez vous ressourcer au cœur de l’Ardèche méridionale et de la station thermale de Vals-les-Bains, dans environnement superbe et reposant, un hébergement dans une nuit pour 2 personnes Hôtel des Bains. Offrez-vous une parenthèse de bien-être au cœur d’un hôtel de charme victorien datant de 1860. Ce coffret comprend : Une nuit en chambre double dans notre établissement historique. Un petit-déjeuner gourmand servi sous forme de buffet à volonté. Un massage duo « Lâcher-prise & Relaxation » de 50 minutes. Deux accès de 2h au spa Séquoia Redwood.',
                     'Saint-Laurent-Les-Bains': 'Escapade Sérénité 5 soins thermaux + 3 accès : Bain de kaolin en apesanteur, Bain reminéralisant Hydromassant, Ondée thermale,  Jets sous immersion en piscine thermale, Massage Détente aromatique de 30 minutes, un accès au Bain de vapeur, à la tisanerie et à l’espace Fitness1 nuit en studio tout équipé dans nos Résidences de la Vallée + 2 petits-déjeuners.'
@@ -696,7 +641,6 @@ Cordialement,
             },
         };
 
-        // Liste des stations thermales par box
         const boxStations = {
             "BOX Premiers émois thermaux": [
                 'Bourbon-Lancy', 'Châteauneuf-les-Bains', 'Cransac-les-Thermes', 'La Bourboule',
@@ -718,14 +662,60 @@ Cordialement,
                 'La Bourboule', 'Bourbon-Lancy', 'Châtel-Guyon', 'Vals-les-Bains'
             ]
         };
+
+        const contactsParBoxEtStation = {
+            "BOX Premiers émois thermaux": {
+                "Bourbon-Lancy": "contact@stbl.com",
+                "Saint-Laurent-les-Bains": "Karine.QUET@chainethermale.fr",
+                "Saint-Honoré-les-Bains": "sainthonorelesbains@chainethermale.fr",
+                "Royat-Chamalières": "reservation@thermesderoyat.fr",
+                "Néris-les-Bains": "contact@neriades.com",
+                "Le Mont-Dore": "lemontdore@chainethermale.fr, Helene.Burny@chainethermale.fr",
+                "La Bourboule": "contact.thermes@grandsthermes.com",
+                "Cransac-les-Thermes": "cransaclesthermes@chainethermale.fr",
+                "Châteauneuf-les-Bains": "info@thermes-chateauneuf.fr"
+            },
+            "Box Divine évasion au spa": {
+                "Bourbon-Lancy": "contact@stbl.com, contact@celto.fr",
+                "Bourbon-l’Archambault": "bourbonlarchambault@chainethermale.fr",
+                "Saint-Honoré-les-Bains": "sainthonorelesbains@chainethermale.fr",
+                "Royat-Chamalières": "reservation@thermesderoyat.fr, reservation@royatonic.com",
+                "Néris-les-Bains": "contact@neriades.com",
+                "Le Mont-Dore": "lemontdore@chainethermale.fr, Helene.Burny@chainethermale.fr",
+                "Montrond-les-Bains": "contact@thermes-montrond.com, contact@lesileades.com",
+                "Cransac-les-Thermes": "cransaclesthermes@chainethermale.fr",
+                "Châteauneuf-les-Bains": "info@thermes-chateauneuf.fr",
+                "Vals-les-Bains": "accueil@thermesdevals.com"
+            },
+            "BOX Eveil des sens": {
+                "Bourbon-Lancy": "contact@stbl.com, cloitre@stbl.fr",
+                "La Bourboule": "contact.thermes@grandsthermes.com",
+                "Châteauneuf-les-Bains": "info@thermes-chateauneuf.fr, castel-hotel-1904@orange.fr",
+                "Royat-Chamalières": "reservation@thermesderoyat.fr, contact@hotel-auvergne.com"
+            },
+            "Box Le séjour des Accros du Peignoir": {
+                "La Bourboule": "contact.thermes@grandsthermes.com, chalet.pompin@gmail.com",
+                "Bourbon-Lancy": "contact@stbl.com, contact@celto.fr, cloitre@stbl.fr",
+                "Châteauneuf-les-Bains": "info@thermes-chateauneuf.fr, castel-hotel-1904@orange.fr",
+                "Royat-Chamalières": "reservation@thermesderoyat.fr, contact@hotel-auvergne.com",
+                "Châtel-Guyon": "resa@aiga-resort.com, partenariat-aiga@aiga-resort.com",
+                "Cransac-les-Thermes": "cransaclesthermes@chainethermale.fr",
+                "Chaudes-Aigues": "info@caleden.com",
+                "Saint-Laurent-les-Bains": "Karine.QUET@chainethermale.fr, saintlaurentlesbains@chainethermale.fr",
+                "Vals-les-Bains": "emma.fargier@domainedesbains.fr"
+            },
+            "Box Le séjour des Accros du Peignoir PREMIUM": {
+                "La Bourboule": "contact.thermes@grandsthermes.com, chalet.pompin@gmail.com",
+                "Bourbon-Lancy": "contact@stbl.com, contact@celto.fr, cloitre@stbl.fr",
+                "Châtel-Guyon": "resa@aiga-resort.com, partenariat-aiga@aiga-resort.com",
+                "Vals-les-Bains": "emma.fargier@domainedesbains.fr"
+            }
+        };
+
         const statuses = ['Non traité', 'Mail envoyé', 'Validé'];
 
         // --- Fonctions de gestion de l'interface ---
 
-        /**
-         * Affiche la section demandée et cache les autres.
-         * @param {string} sectionId - L'ID de la section à afficher (e.g., 'dashboard', 'form').
-         */
         function showSection(sectionId) {
             document.querySelectorAll('.section').forEach(section => {
                 section.classList.remove('active');
@@ -733,93 +723,72 @@ Cordialement,
             document.getElementById(sectionId).classList.add('active');
         }
 
-        /**
-         * Réinitialise le formulaire de création/édition.
-         */
         function resetForm() {
             form.reset();
             document.getElementById('formTitle').textContent = 'Ajouter un nouveau dossier';
             editingId = null;
-            renderParticipantFields(1); // Affiche 1 participant par défaut
+            renderParticipantFields(1); 
         }
 
-        // --- Fonctions CRUD (Créer, Lire, Mettre à jour, Supprimer) avec Supabase ---
+        // --- Fonctions CRUD avec Supabase ---
 
-        /**
-         * Charge les clients depuis Supabase.
-         */
-/**
- * Charge les clients depuis Supabase (au lieu de LocalStorage).
- */
-async function loadClients() {
-    // 1. Récupérer l'utilisateur connecté
-    const { data: { user } } = await supabaseClient.auth.getUser();
+        async function loadClients() {
+            const { data: { user } } = await supabaseClient.auth.getUser();
 
-    if (!user) {
-        console.log("Erreur de connexion: Utilisateur non trouvé.");
-        clients = [];
-        renderDashboard();
-        return;
-    }
-    
-    // VÉRIFICATION CLÉ
-    console.log("UUID de l'utilisateur connecté:", user.id);    
-    
-    // 2. Construire la requête avec le filtre utilisateur
-    const { data, error } = await supabaseClient
-        .from(TABLE_NAME)
-        .select('*', { head: false }) // L'option anti-cache
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false }); // Un seul point-virgule final
+            if (!user) {
+                console.log("Erreur de connexion: Utilisateur non trouvé.");
+                clients = [];
+                renderDashboard();
+                return;
+            }
+            
+            console.log("UUID de l'utilisateur connecté:", user.id);    
+            
+            const { data, error } = await supabaseClient
+                .from(TABLE_NAME)
+                .select('*', { head: false }) 
+                .eq('user_id', user.id)
+                .order('created_at', { ascending: false }); 
 
-    // 3. GESTION DES ERREURS
-    if (error) {
-        console.error('Erreur lors du chargement des clients:', error);
-        return;
-    }
-    console.log("Données reçues de Supabase:", data);
-    
-    // 4. PRÉPARATION et RENDU
-    clients = data || [];
-    renderDashboard();
-}
+            if (error) {
+                console.error('Erreur lors du chargement des clients:', error);
+                return;
+            }
+            console.log("Données reçues de Supabase:", data);
+            
+            clients = data || [];
+            renderDashboard();
+        }
 
-        /**
-         * Fonction pour sauvegarder/mettre à jour un client dans Supabase.
-         * @param {object} clientData - Les données du client à insérer ou mettre à jour.
-         */
         async function saveClient(clientData) {
             if (clientData.id) {
-                // MODIFICATION (UPDATE)
                 const { error } = await supabaseClient
                     .from(TABLE_NAME)
                     .update(clientData)
-                    .eq('id', clientData.id); // Utilise l'ID Supabase pour la mise à jour
+                    .eq('id', clientData.id); 
 
                 if (error) {
                     console.error("Erreur lors de la modification du client:", error);
                     alert("Erreur lors de la modification du dossier.");
                 }
-} else {
-                // CRÉATION (INSERT)
+            } else {
                 delete clientData.id;
                 
-                // 1. Récupérer l'ID de l'utilisateur connecté
                 const { data: { user } } = await supabaseClient.auth.getUser();
 
                 const { data, error } = await supabaseClient
                     .from(TABLE_NAME)
                     .insert({ 
                         ...clientData, 
-                        user_id: user.id // <--- AJOUT DE L'ID UTILISATEUR ICI
+                        user_id: user.id 
                     })
-                    .select(); // Récupère le client inséré avec son ID Supabase
+                    .select(); 
 
                 if (error) {
                     console.error("Erreur lors de l'ajout du client:", error);
                     alert("Erreur lors de l'ajout du dossier.");
                 } else if (data && data.length > 0) {
-                    clients.unshift(data[0]); 
+                    clients.unshift(data[0]); 
                 }
             }
             
@@ -828,366 +797,252 @@ async function loadClients() {
             showSection('dashboard');
         }
 
-
-/**
- * Gère la soumission du formulaire : collecte les données du client et les envoie à saveClient.
- * @param {Event} event - L'événement de soumission du formulaire.
- */
-async function leFormSubmit(event) {
-    // Empêche le rechargement de la page
-    event.preventDefault();
-    
-    // Récupération des données du formulaire
-    const numParticipants = document.getElementById('nbParticipants').value;
-    const participants = [];
-    
-    // Boucle pour collecter les informations des participants
-    for (let i = 0; i < numParticipants; i++) {
-        participants.push({
-            nom: document.getElementById(`nom-${i}`).value,
-            prenom: document.getElementById(`prenom-${i}`).value,
-            email: document.getElementById(`email-${i}`).value,
-            telephone: document.getElementById(`telephone-${i}`).value,
-            adresse: document.getElementById(`adresse-${i}`).value,
-        });
-    }
-
-    // Création de l'objet client à sauvegarder
-    // Note : La variable 'form' doit être accessible globalement ou définie dans ce scope.
-    const clientToSave = {
-        // L'ID est passé pour que saveClient sache s'il doit faire un INSERT ou un UPDATE
-        id: editingId, // La variable globale 'editingId' doit être définie
-        
-        boxId: document.getElementById('boxId').value,
-        typeBox: form.typeBox.value,
-        station: form.station.value,
-        dates: form.dates.value,
-        
-        // Récupère le statut existant en mode édition, sinon utilise la valeur par défaut
-        statut: editingId ? clients.find(c => c.id === editingId).statut : 'Non traité',
-        facturee: editingId ? clients.find(c => c.id === editingId).facturee : false,
-        
-        commentaires: document.getElementById('commentaires').value,
-        participants: participants, // Stocké comme JSONB
-    };
-
-    // Envoi des données à Supabase et attente de la sauvegarde
-    await saveClient(clientToSave);
-}
-
-        /**
-         * Rempli le formulaire avec les données d'un client pour modification.
-         * @param {number} id - L'ID du client à modifier.
-         */
-function editClient(id) {
-    // L'ID est passé comme une chaîne de caractères
-    const client = clients.find(c => String(c.id) === id); 
-    if (!client) {
-        console.error("Client non trouvé lors de l'édition pour l'ID:", id); 
-        return;
-    }
-    
-    editingId = client.id;
-    document.getElementById('formTitle').textContent = `Modifier le dossier de ${client.participants[0].prenom} ${client.participants[0].nom}`;
-
-    document.getElementById('boxId').value = client.boxId;
-    form.typeBox.value = client.typeBox;
-    updateStationDropdown(); // Met à jour la liste des stations
-    form.station.value = client.station;
-    form.dates.value = client.dates;
-    form.nbParticipants.value = client.participants.length;
-    document.getElementById('commentaires').value = client.commentaires || '';
-    renderParticipantFields(client.participants.length, client.participants);
-    
-    showSection('form');
-}
-
-        /**
-         * Supprime un client de la liste dans Supabase.
-         * @param {number} id - L'ID (Supabase) du client à supprimer.
-         */
-async function deleteClient(id) {
-    // L'ID est passé comme une chaîne de caractères
-    const client = clients.find(c => String(c.id) === id);
-    if (!client) return;
-
-    if (confirm("Êtes-vous sûr de vouloir supprimer ce dossier client ?")) {
-        // Déclaration explicite de la variable de résultat
-        let deleteError = null; 
-
-        try {
-            // L'appel à la BDD est ici, et il est essentiel qu'il soit propre
-            const { error } = await supabaseClient
-                .from(TABLE_NAME)
-                .delete()
-                .eq('id', client.id);
-
-            deleteError = error; // Stocke l'erreur (ou null si succès)
-
-        } catch (e) {
-            // Bloc de sécurité si l'appel Supabase lui-même échoue
-            console.error("Erreur critique d'appel Supabase:", e);
-            deleteError = e; 
-        }
-
-        if (deleteError) {
-            console.error("Erreur lors de la suppression:", deleteError);
-            alert("Erreur lors de la suppression du dossier. Vérifiez la console.");
-        } else {
-            // Si aucune erreur, on recharge les données fraîches du serveur (anti-cache)
-            await loadClients();
-            alert("Dossier supprimé avec succès."); 
-        }
-    }
-}
-        
-        /**
-         * Met à jour le statut de facturation et la couleur du bouton dans Supabase.
-         * @param {number} id - L'ID (Supabase) du client.
-         */
-       async function updateFactureStatus(id) {
-    // L'ID est passé comme une chaîne de caractères
-    const client = clients.find(c => String(c.id) === id);
-    if (client) {
-        const newFactureeStatus = !client.facturee;
-
-        const { error } = await supabaseClient
-            .from(TABLE_NAME)
-            .update({ facturee: newFactureeStatus })
-            .eq('id', client.id); // Utilisation de l'ID string (UUID)
+        async function leFormSubmit(event) {
+            event.preventDefault();
             
-        if (error) {
-            console.error("Erreur mise à jour facturation:", error);
-            alert("Erreur lors de la mise à jour du statut de facturation.");
-        } else {
-            // Met à jour la liste locale et l'affichage
-            client.facturee = newFactureeStatus;
-            renderDashboard(); 
+            const numParticipants = document.getElementById('nbParticipants').value;
+            const participants = [];
+            
+            for (let i = 0; i < numParticipants; i++) {
+                participants.push({
+                    nom: document.getElementById(`nom-${i}`).value,
+                    prenom: document.getElementById(`prenom-${i}`).value,
+                    email: document.getElementById(`email-${i}`).value,
+                    telephone: document.getElementById(`telephone-${i}`).value,
+                    adresse: document.getElementById(`adresse-${i}`).value,
+                });
+            }
+
+            const clientToSave = {
+                id: editingId, 
+                
+                boxId: document.getElementById('boxId').value,
+                typeBox: form.typeBox.value,
+                station: form.station.value,
+                dates: form.dates.value,
+                
+                statut: editingId ? clients.find(c => c.id === editingId).statut : 'Non traité',
+                facturee: editingId ? clients.find(c => c.id === editingId).facturee : false,
+                
+                commentaires: document.getElementById('commentaires').value,
+                participants: participants, 
+            };
+
+            await saveClient(clientToSave);
         }
-    }
-}
-        
-        /**
-         * Met à jour le statut d'un client et son style dans Supabase.
-         * @param {number} id - L'ID (Supabase) du client.
-         * @param {string} newStatus - Le nouveau statut.
-         * @param {HTMLElement} element - L'élément select qui a déclenché l'événement.
-         */
-       async function updateClientStatus(id, newStatus, element) {
-    // L'ID est passé comme une chaîne de caractères
-    const client = clients.find(c => String(c.id) === id);
-    if (client) {
-        const { error } = await supabaseClient
-            .from(TABLE_NAME)
-            .update({ statut: newStatus })
-            .eq('id', client.id); // Utilisation de l'ID string (UUID)
 
-        if (error) {
-            console.error("Erreur mise à jour statut:", error);
-            alert("Erreur lors de la mise à jour du statut.");
-        } else {
-            // Met à jour la liste locale et le style
-            client.statut = newStatus;
-            element.className = ''; 
-            element.classList.add('status-select', `status-${newStatus.replace(/\s/g, '-')}`);
+        function editClient(id) {
+            const client = clients.find(c => String(c.id) === id); 
+            if (!client) {
+                console.error("Client non trouvé lors de l'édition pour l'ID:", id); 
+                return;
+            }
+            
+            editingId = client.id;
+            document.getElementById('formTitle').textContent = `Modifier le dossier de ${client.participants[0].prenom} ${client.participants[0].nom}`;
+
+            document.getElementById('boxId').value = client.boxId;
+            form.typeBox.value = client.typeBox;
+            updateStationDropdown(); 
+            form.station.value = client.station;
+            form.dates.value = client.dates;
+            form.nbParticipants.value = client.participants.length;
+            document.getElementById('commentaires').value = client.commentaires || '';
+            renderParticipantFields(client.participants.length, client.participants);
+            
+            showSection('form');
         }
-    }
-}
 
-        /**
-         * Affiche les commentaires d'un dossier dans une pop-up.
-         * @param {number} id - L'ID du client.
-         */
-      function showComment(id) {
-    // L'ID est passé comme une chaîne de caractères
-    const client = clients.find(c => String(c.id) === id);
-    if (client && client.commentaires) {
-        alert(`Commentaires pour le dossier ${client.boxId}:\n\n${client.commentaires}`);
-    } else {
-        alert("Aucun commentaire pour ce dossier.");
-    }
-}
+        async function deleteClient(id) {
+            const client = clients.find(c => String(c.id) === id);
+            if (!client) return;
 
+            if (confirm("Êtes-vous sûr de vouloir supprimer ce dossier client ?")) {
+                let deleteError = null; 
 
-        // --- Fonctions d'affichage et de rendu (Pas de changement Supabase ici) ---
+                try {
+                    const { error } = await supabaseClient
+                        .from(TABLE_NAME)
+                        .delete()
+                        .eq('id', client.id);
 
-/**
- * Met à jour le tableau de bord avec les clients actuels en appliquant les filtres.
- */
-function renderDashboard() {
-    // MODIFICATION 1 : Utilisation d'un sélecteur direct pour le corps du tableau (tbody)
-    const tableBody = document.getElementById('clientsTableBody'); 
-    
-    // Récupération des autres éléments
-    const noClientsMessage = document.getElementById('noClientsMessage');
-    const table = document.getElementById('clientsTable');
-    
-    // Vérification de sécurité CRITIQUE pour le rendu
-    if (!tableBody || !table || !noClientsMessage) {
-        // Cette erreur s'affichera si le tbody n'a pas l'ID 'clientsTableBody' dans le HTML !
-        console.error("Erreur critique: Le corps du tableau (clientsTableBody) n'a pas été trouvé. Vérifiez votre HTML.");
-        return;
-    }
-    
-    tableBody.innerHTML = ''; // Vide le tableau
+                    deleteError = error; 
 
-    // Récupération des valeurs des filtres (aucune modification ici, la logique 'all' est correcte)
-    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-    const boxTypeFilter = document.getElementById('boxTypeFilter').value;
-    const stationFilter = document.getElementById('stationFilter').value;
-    const statusFilter = document.getElementById('statusFilter').value;
-    const factureeFilter = document.getElementById('factureeFilter').value;
+                } catch (e) {
+                    console.error("Erreur critique d'appel Supabase:", e);
+                    deleteError = e; 
+                }
 
-
-    // Filtre les clients
-    const filteredClients = clients.filter(client => {
-        // Logique de recherche (inchangée)
-        const matchesSearch = searchTerm === '' || 
-                              client.boxId.toLowerCase().includes(searchTerm) ||
-                              client.participants.some(p => 
-                                  p.nom.toLowerCase().includes(searchTerm) ||
-                                  p.prenom.toLowerCase().includes(searchTerm) ||
-                                  (p.email && p.email.toLowerCase().includes(searchTerm)) ||
-                                  (p.telephone && p.telephone.toLowerCase().includes(searchTerm))
-                              );
-                              
-        // NOUVELLE LOGIQUE : Accepte 'all' OU la chaîne vide ''
-        const matchesBoxType = (boxTypeFilter === 'all' || boxTypeFilter === '') || client.typeBox === boxTypeFilter;
-        const matchesStation = (stationFilter === 'all' || stationFilter === '') || client.station === stationFilter;
-        const matchesStatus = (statusFilter === 'all' || statusFilter === '') || client.statut === statusFilter; 
+                if (deleteError) {
+                    console.error("Erreur lors de la suppression:", deleteError);
+                    alert("Erreur lors de la suppression du dossier. Vérifiez la console.");
+                } else {
+                    await loadClients();
+                    alert("Dossier supprimé avec succès."); 
+                }
+            }
+        }
         
-        // La logique de facture doit aussi inclure la chaîne vide
-        // La logique corrigée utilise la nouvelle variable "factureeFilter"
-// La variable utilisée est probablement 'factureeFilter' ou 'factureeFilterValue'
-// ... (peu importe son nom, utilisons la nouvelle valeur du HTML)
+        async function updateFactureStatus(id) {
+            const client = clients.find(c => String(c.id) === id);
+            if (client) {
+                const newFactureeStatus = !client.facturee;
 
-const matchesFacture = (factureeFilter === 'all' || factureeFilter === '') || 
-                       // Utilisation des valeurs de votre HTML : 'facturee' et 'nonFacturee'
-                       (factureeFilter === 'facturee' && client.facturee === true) || 
-                       (factureeFilter === 'nonFacturee' && client.facturee === false);
+                const { error } = await supabaseClient
+                    .from(TABLE_NAME)
+                    .update({ facturee: newFactureeStatus })
+                    .eq('id', client.id); 
+                    
+                if (error) {
+                    console.error("Erreur mise à jour facturation:", error);
+                    alert("Erreur lors de la mise à jour du statut de facturation.");
+                } else {
+                    client.facturee = newFactureeStatus;
+                    renderDashboard(); 
+                }
+            }
+        }
         
-        return matchesSearch && matchesBoxType && matchesStation && matchesStatus && matchesFacture;
-    });
+        async function updateClientStatus(id, newStatus, element) {
+            const client = clients.find(c => String(c.id) === id);
+            if (client) {
+                const { error } = await supabaseClient
+                    .from(TABLE_NAME)
+                    .update({ statut: newStatus })
+                    .eq('id', client.id); 
 
-    // ----------------------------------------------------
-    // CONSOLE DE VÉRIFICATION
-    console.log("Nombre de dossiers à afficher (après filtres):", filteredClients.length);
-    // ----------------------------------------------------
+                if (error) {
+                    console.error("Erreur mise à jour statut:", error);
+                    alert("Erreur lors de la mise à jour du statut.");
+                } else {
+                    client.statut = newStatus;
+                    element.className = ''; 
+                    element.classList.add('status-select', `status-${newStatus.replace(/\s/g, '-')}`);
+                }
+            }
+        }
 
-    if (filteredClients.length === 0) {
-        noClientsMessage.style.display = 'block';
-        table.style.display = 'none';
-    } else {
-        noClientsMessage.style.display = 'none';
-        table.style.display = 'table';
+        function showComment(id) {
+            const client = clients.find(c => String(c.id) === id);
+            if (client && client.commentaires) {
+                alert(`Commentaires pour le dossier ${client.boxId}:\n\n${client.commentaires}`);
+            } else {
+                alert("Aucun commentaire pour ce dossier.");
+            }
+        }
+
+        // --- Fonctions d'affichage et de rendu ---
+
+        function renderDashboard() {
+            const tableBody = document.getElementById('clientsTableBody'); 
+            const noClientsMessage = document.getElementById('noClientsMessage');
+            const table = document.getElementById('clientsTable');
+            
+            if (!tableBody || !table || !noClientsMessage) {
+                console.error("Erreur critique: Le corps du tableau (clientsTableBody) n'a pas été trouvé. Vérifiez votre HTML.");
+                return;
+            }
+            
+            tableBody.innerHTML = ''; 
+
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const boxTypeFilter = document.getElementById('boxTypeFilter').value;
+            const stationFilter = document.getElementById('stationFilter').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+            const factureeFilter = document.getElementById('factureeFilter').value;
+
+            const filteredClients = clients.filter(client => {
+                const matchesSearch = searchTerm === '' || 
+                                      client.boxId.toLowerCase().includes(searchTerm) ||
+                                      client.participants.some(p => 
+                                          p.nom.toLowerCase().includes(searchTerm) ||
+                                          p.prenom.toLowerCase().includes(searchTerm) ||
+                                          (p.email && p.email.toLowerCase().includes(searchTerm)) ||
+                                          (p.telephone && p.telephone.toLowerCase().includes(searchTerm))
+                                      );
+                                      
+                const matchesBoxType = (boxTypeFilter === 'all' || boxTypeFilter === '') || client.typeBox === boxTypeFilter;
+                const matchesStation = (stationFilter === 'all' || stationFilter === '') || client.station === stationFilter;
+                const matchesStatus = (statusFilter === 'all' || statusFilter === '') || client.statut === statusFilter; 
+                
+                const matchesFacture = (factureeFilter === 'all' || factureeFilter === '') || 
+                                       (factureeFilter === 'facturee' && client.facturee === true) || 
+                                       (factureeFilter === 'nonFacturee' && client.facturee === false);
+                
+                return matchesSearch && matchesBoxType && matchesStation && matchesStatus && matchesFacture;
+            });
+
+            console.log("Nombre de dossiers à afficher (après filtres):", filteredClients.length);
+
+            if (filteredClients.length === 0) {
+                noClientsMessage.style.display = 'block';
+                table.style.display = 'none';
+            } else {
+                noClientsMessage.style.display = 'none';
+                table.style.display = 'table';
+                
+                filteredClients.forEach(client => {
+                    const mainParticipant = client.participants[0];
+                    
+                    tableBody.innerHTML += `
+                        <tr>
+                            <td>${mainParticipant.prenom} ${mainParticipant.nom}</td>
+                            <td>${client.boxId}</td>
+                            <td>${client.typeBox}</td>
+                            <td>${client.station}</td>
+                            <td>
+                                <select class="status-select status-${client.statut.replace(/\s/g, '-')}" onchange="updateClientStatus('${client.id}', this.value, this)">
+                                    ${statuses.map(s => `<option value="${s}" ${s === client.statut ? 'selected' : ''}>${s}</option>`).join('')}
+                                </select>
+                            </td>
+                            <td>
+                                <button class="facture-button ${client.facturee ? 'facture-oui' : 'facture-non'}" onclick="updateFactureStatus('${client.id}')">
+                                    ${client.facturee ? 'Facturé' : 'Non facturé'}
+                                </button>
+                            </td>
+                            <td>
+                                <button class="edit-btn" onclick="editClient('${client.id}')">Voir / Modifier</button>
+                                <button class="comment-btn" onclick="showComment('${client.id}')">Commentaires</button>
+                                <button class="delete-btn" onclick="deleteClient('${client.id}')">Supprimer</button>
+                                <button class="mail-btn" onclick="generateMail('${client.id}')">Générer mail</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+        }
         
-        filteredClients.forEach(client => {
+        function generateMail(id) {
+            const client = clients.find(c => String(c.id) === id);
+            if (!client) return;
+            
             const mainParticipant = client.participants[0];
+            const numParticipants = client.participants.length;
+            const boxType = client.typeBox;
+            const station = client.station;
             
-            // MODIFICATION 2 : Utilisation de innerHTML pour insérer la ligne 
-            // C'est plus simple et sécuritaire ici
-            tableBody.innerHTML += `
-                <tr>
-                    <td>${mainParticipant.prenom} ${mainParticipant.nom}</td>
-                    <td>${client.boxId}</td>
-                    <td>${client.typeBox}</td>
-                    <td>${client.station}</td>
-                    <td>
-                        <select class="status-select status-${client.statut.replace(/\s/g, '-')}" onchange="updateClientStatus('${client.id}', this.value, this)">
-                            ${statuses.map(s => `<option value="${s}" ${s === client.statut ? 'selected' : ''}>${s}</option>`).join('')}
-                        </select>
-                    </td>
-                    <td>
-                        <button class="facture-button ${client.facturee ? 'facture-oui' : 'facture-non'}" onclick="updateFactureStatus('${client.id}')">
-                            ${client.facturee ? 'Facturé' : 'Non facturé'}
-                        </button>
-                    </td>
-                    <td>
-                        <button class="edit-btn" onclick="editClient('${client.id}')">Voir / Modifier</button>
-                        <button class="comment-btn" onclick="showComment('${client.id}')">Commentaires</button>
-                        <button class="delete-btn" onclick="deleteClient('${client.id}')">Supprimer</button>
-                        <button class="mail-btn" onclick="generateMail('${client.id}')">Générer mail</button>
-                    </td>
-                </tr>
-            `;
-        });
-    }
-}
-        
-        /**
-         * Génère et affiche le contenu d'un mail pour un client.
-         * @param {number} id - L'ID du client.
-         */
-function generateMail(id) {
-    const client = clients.find(c => String(c.id) === id);
-    if (!client) return;
-    
-    const mainParticipant = client.participants[0];
-    const numParticipants = client.participants.length;
-    const boxType = client.typeBox;
-    const station = client.station;
-    
-    let recipientEmail = 'adresse@non-renseignee.fr';
-    if (contactsParBoxEtStation[boxType] && contactsParBoxEtStation[boxType][station]) {
-        recipientEmail = contactsParBoxEtStation[boxType][station];
-    }
-    
-    const boxInfo = boxDetails[boxType];
-    const composition = boxInfo.composition[station] || "Composition non disponible.";
-    
-    let prix_box;
-    let prix_box_10_percent;
+            let recipientEmail = 'adresse@non-renseignee.fr';
+            if (contactsParBoxEtStation[boxType] && contactsParBoxEtStation[boxType][station]) {
+                recipientEmail = contactsParBoxEtStation[boxType][station];
+            }
+            
+            const boxInfo = boxDetails[boxType];
+            const composition = boxInfo.composition[station] || "Composition non disponible.";
+            
+            let prix_box;
+            let prix_box_10_percent;
 
-    if (boxType === "BOX Eveil des sens") {
-        prix_box = `pour les soins ${boxInfo.price_soins} et pour le restaurant ${boxInfo.price_restaurant}`;
-        prix_box_10_percent = `pour les soins ${boxInfo.price_10_percent_soins} et pour le restaurant ${boxInfo.price_10_percent_restaurant}`;
-    } else if (boxType === "Box Le séjour des Accros du Peignoir" || boxType === "Box Le séjour des Accros du Peignoir PREMIUM") {
-        prix_box = `pour les soins ${boxInfo.price_soins} et pour l’hôtellerie ${boxInfo.price_hotellerie}`;
-        prix_box_10_percent = `pour les soins ${boxInfo.price_10_percent_soins} et pour l’hôtellerie ${boxInfo.price_10_percent_hotellerie}`;
-    } else {
-        prix_box = boxInfo.price;
-        prix_box_10_percent = boxInfo.price_10_percent_off;
-    }
+            if (boxType === "BOX Eveil des sens") {
+                prix_box = `pour les soins ${boxInfo.price_soins} et pour le restaurant ${boxInfo.price_restaurant}`;
+                prix_box_10_percent = `pour les soins ${boxInfo.price_10_percent_soins} et pour le restaurant ${boxInfo.price_10_percent_restaurant}`;
+            } else if (boxType === "Box Le séjour des Accros du Peignoir" || boxType === "Box Le séjour des Accros du Peignoir PREMIUM") {
+                prix_box = `pour les soins ${boxInfo.price_soins} et pour l’hôtellerie ${boxInfo.price_hotellerie}`;
+                prix_box_10_percent = `pour les soins ${boxInfo.price_10_percent_soins} et pour l’hôtellerie ${boxInfo.price_10_percent_hotellerie}`;
+            } else {
+                prix_box = boxInfo.price;
+                prix_box_10_percent = boxInfo.price_10_percent_off;
+            }
 
-    let clientInfoString = '';
-    client.participants.forEach((p, index) => {
-        clientInfoString += `
-Informations du participant ${index + 1} :
-Nom : ${p.nom}
-Prénom : ${p.prenom}
-Email : ${p.email}
-Téléphone : ${p.telephone || 'Non renseigné'}
-Adresse : ${p.adresse || 'Non renseignée'}
-`;
-    });
-
-    const mailBody = mailBodyTemplate
-        .replace(/{{Sexe}}/g, 'Monsieur ou Madame')
-        .replace(/{{Nom et prénom du client}}/g, `${mainParticipant.nom} ${mainParticipant.prenom}`)
-        .replace(/{{Type de Box}}/g, boxType)
-        .replace(/{{Ville\/ Station choisi pour réaliser la box}}/g, station)
-        .replace(/{{Nombre de client participant}}/g, numParticipants)
-        .replace(/{{Composition de la Box}}/g, composition)
-        .replace(/{{Prix de la box}}/g, prix_box)
-        .replace(/{{Prix de la box - 10%}}/g, prix_box_10_percent)
-        .replace(/{{Date souhaitait par le client}}/g, client.dates || 'Non renseignées')
-        .replace(/{{Ensemble des informations des clients}}/g, clientInfoString);
-    
-    document.getElementById('mailRecipient').textContent = recipientEmail;
-    document.getElementById('mailSubject').textContent = mailSubjectTemplate;
-    document.getElementById('mailBody').textContent = mailBody;
-    showSection('mailGenerator');
-}
-function copyMailRecipient() {
-    const mailContent = document.getElementById('mailRecipient').textContent;
-    navigator.clipboard.writeText(mailContent).then(() => {
-        alert("L'adresse électronique a été copiée");
-    }).catch(err => {
-        console.error("Erreur lors de la copie", err);
-        alert("Erreur lors de la copie de l'adresse");
-    });
-}
-            // Construire la liste des informations des clients
             let clientInfoString = '';
             client.participants.forEach((p, index) => {
                 clientInfoString += `
@@ -1200,7 +1055,6 @@ Adresse : ${p.adresse || 'Non renseignée'}
 `;
             });
 
-            // Remplacement des variables dans le modèle de corps du mail
             const mailBody = mailBodyTemplate
                 .replace(/{{Sexe}}/g, 'Monsieur ou Madame')
                 .replace(/{{Nom et prénom du client}}/g, `${mainParticipant.nom} ${mainParticipant.prenom}`)
@@ -1213,22 +1067,28 @@ Adresse : ${p.adresse || 'Non renseignée'}
                 .replace(/{{Date souhaitait par le client}}/g, client.dates || 'Non renseignées')
                 .replace(/{{Ensemble des informations des clients}}/g, clientInfoString);
             
+            document.getElementById('mailRecipient').textContent = recipientEmail;
             document.getElementById('mailSubject').textContent = mailSubjectTemplate;
             document.getElementById('mailBody').textContent = mailBody;
             showSection('mailGenerator');
         }
 
-        /**
-         * Génère et affiche le contenu du mail d'activation.
-         * @param {number} numClients - Le nombre de clients (1 ou 2).
-         */
+        function copyMailRecipient() {
+            const mailContent = document.getElementById('mailRecipient').textContent;
+            navigator.clipboard.writeText(mailContent).then(() => {
+                alert("L'adresse électronique a été copiée !");
+            }).catch(err => {
+                console.error("Erreur lors de la copie", err);
+                alert("Erreur lors de la copie de l'adresse");
+            });
+        }
+
         function generateActivationMail(numClients) {
             const container = document.getElementById('activationMailContainer');
             const subjectContent = document.getElementById('activationMailSubject');
             const bodyContent = document.getElementById('activationMailBody');
 
             container.style.display = 'block';
-
             subjectContent.textContent = activationMailSubjectTemplate;
 
             if (numClients === 1) {
@@ -1238,9 +1098,6 @@ Adresse : ${p.adresse || 'Non renseignée'}
             }
         }
         
-        /**
-         * Copie l'objet du mail dans le presse-papiers.
-         */
         function copyMailSubject() {
             const mailContent = document.getElementById('mailSubject').textContent;
             navigator.clipboard.writeText(mailContent).then(() => {
@@ -1251,9 +1108,6 @@ Adresse : ${p.adresse || 'Non renseignée'}
             });
         }
         
-        /**
-         * Copie le corps du mail dans le presse-papiers.
-         */
         function copyMailBody() {
             const mailContent = document.getElementById('mailBody').textContent;
             navigator.clipboard.writeText(mailContent).then(() => {
@@ -1264,9 +1118,6 @@ Adresse : ${p.adresse || 'Non renseignée'}
             });
         }
 
-        /**
-         * Copie l'objet du mail d'activation dans le presse-papiers.
-         */
         function copyActivationMailSubject() {
             const mailContent = document.getElementById('activationMailSubject').textContent;
             navigator.clipboard.writeText(mailContent).then(() => {
@@ -1277,9 +1128,6 @@ Adresse : ${p.adresse || 'Non renseignée'}
             });
         }
 
-        /**
-         * Copie le corps du mail d'activation dans le presse-papiers.
-         */
         function copyActivationMailBody() {
             const mailContent = document.getElementById('activationMailBody').textContent;
             navigator.clipboard.writeText(mailContent).then(() => {
@@ -1290,13 +1138,10 @@ Adresse : ${p.adresse || 'Non renseignée'}
             });
         }
         
-        /**
-         * Met à jour la liste déroulante des stations en fonction de la box sélectionnée.
-         */
         function updateStationDropdown() {
             const selectedBox = document.getElementById('typeBox').value;
             const stationSelect = document.getElementById('station');
-            stationSelect.innerHTML = '<option value="">Sélectionner...</option>'; // Réinitialise
+            stationSelect.innerHTML = '<option value="">Sélectionner...</option>'; 
             
             if (selectedBox && boxStations[selectedBox]) {
                 boxStations[selectedBox].forEach(station => {
@@ -1308,13 +1153,8 @@ Adresse : ${p.adresse || 'Non renseignée'}
             }
         }
 
-        /**
-         * Génère dynamiquement les champs du formulaire pour le nombre de participants.
-         * @param {number} count - Le nombre de participants.
-         * @param {Array} data - Les données des participants pour l'édition (optionnel).
-         */
         function renderParticipantFields(count, data = []) {
-            participantsContainer.innerHTML = ''; // Vide le conteneur
+            participantsContainer.innerHTML = ''; 
             
             for (let i = 0; i < count; i++) {
                 const participant = data[i] || {};
@@ -1347,9 +1187,6 @@ Adresse : ${p.adresse || 'Non renseignée'}
             }
         }
         
-        /**
-         * Remplit le filtre des stations avec toutes les stations disponibles.
-         */
         function populateStationFilter() {
             const stationFilter = document.getElementById('stationFilter');
             const allStations = new Set();
@@ -1367,14 +1204,7 @@ Adresse : ${p.adresse || 'Non renseignée'}
 
 // --- Initialisation de l'application ---
 
-        /**
-         * Fonction d'initialisation appelée au chargement de la page.
-         */
-/**
-         * Fonction d'initialisation appelée au chargement de la page.
-         */
         function initializeApp() {
-            // Écouteurs d'événements (Le code reste le même)
             document.getElementById('typeBox').addEventListener('change', updateStationDropdown);
             document.getElementById('nbParticipants').addEventListener('change', (e) => {
                 renderParticipantFields(e.target.value);
@@ -1382,24 +1212,19 @@ Adresse : ${p.adresse || 'Non renseignée'}
             document.getElementById('searchInput').addEventListener('input', renderDashboard);
             document.getElementById('boxTypeFilter').addEventListener('change', renderDashboard);
             document.getElementById('stationFilter').addEventListener('change', renderDashboard);
-            document.getElementById('statusFilter').addEventListener('change', renderDashboard); // Assurez-vous d'avoir ce filtre
+            document.getElementById('statusFilter').addEventListener('change', renderDashboard); 
 
-            // Écouteur d'événement pour le formulaire
             form.addEventListener('submit', leFormSubmit);
 
-            // Rendu initial
             renderParticipantFields(1);
             populateStationFilter();
             
-            // POINT CLÉ : Vérifie si l'utilisateur est connecté au chargement
             checkUserSession(); 
         }
 
-        // Appelle la fonction d'initialisation au chargement de la page
         document.addEventListener('DOMContentLoaded', initializeApp);
 
-        // Fin du JavaScript
-    </script>
+// Fin du JavaScript
 </body>
 </html>
 
