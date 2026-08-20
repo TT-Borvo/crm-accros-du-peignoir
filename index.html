@@ -367,27 +367,29 @@
             </form>
         </div>
 
-        <div id="mailGenerator" class="section">
-            <h2>Générateur de mail</h2>
-<div class="mail-block">
-    <h3>Destinataire :</h3>
-    <div id="mailRecipient" class="mail-content"></div>
-    <button class="copy-btn" onclick="copyMailRecipient()">Copier l'adresse électronique</button>
-</div>
-            <div class="mail-block">
-                <h3>Objet du mail :</h3>
-                <div id="mailSubject" class="mail-content"></div>
-                <button class="copy-btn" onclick="copyMailSubject()">Copier l'objet</button>
-            </div>
-            
-            <div class="mail-block">
-                <h3>Corps du mail :</h3>
-                <div id="mailBody" class="mail-content"></div>
-                <button class="copy-btn" onclick="copyMailBody()">Copier le corps du mail</button>
-            </div>
+<div id="mailGenerator" class="section">
+    <h2>Générateur de mail</h2>
 
-            <button onclick="showSection('dashboard')">Retour au tableau de bord</button>
-        </div>
+    <div class="mail-block">
+        <h3>Destinataire :</h3>
+        <div id="mailRecipient" class="mail-content"></div>
+        <button class="copy-btn" onclick="copyMailRecipient()">Copier l'adresse électronique</button>
+    </div>
+
+    <div class="mail-block">
+        <h3>Objet du mail :</h3>
+        <div id="mailSubject" class="mail-content"></div>
+        <button class="copy-btn" onclick="copyMailSubject()">Copier l'objet</button>
+    </div>
+    
+    <div class="mail-block">
+        <h3>Corps du mail :</h3>
+        <div id="mailBody" class="mail-content"></div>
+        <button class="copy-btn" onclick="copyMailBody()">Copier le corps du mail</button>
+    </div>
+
+    <button onclick="showSection('dashboard')">Retour au tableau de bord</button>
+</div>
 
         <div id="mailActivation" class="section">
             <h2>Générateur de mail d'activation</h2>
